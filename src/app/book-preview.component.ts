@@ -1,13 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Book } from './wishlist';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'mc-book-preview',
   template: `
     <ng-container *ngIf="book != null">
       <mc-card>
         <span slot="title">{{ book.name }}</span>
-        <mc-price slot="body" [price]="book.price" currency="EUR"></mc-price>
+        <mc-price slot="body" [price]="getPrice()" currency="EUR"></mc-price>
         <div slot="actions">
           <ng-content></ng-content>
         </div>
@@ -17,4 +18,8 @@ import { Book } from './wishlist';
 })
 export class BookPreviewComponent {
   @Input() book: Book | null = null;
+
+  getPrice() {
+    return this.book?.price || null;
+  }
 }

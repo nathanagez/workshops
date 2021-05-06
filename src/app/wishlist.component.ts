@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Book, createBook, Wishlist } from './wishlist';
 
 @Component({
@@ -6,6 +6,7 @@ import { Book, createBook, Wishlist } from './wishlist';
   template: `
     <h1>My Wishlist</h1>
     <ul>
+      <button (click)="addBook()">ADD</button>
       <mc-book-preview *ngFor="let book of getBooks()" [book]="book">
         <button (click)="removeBook(book)">REMOVE</button>
       </mc-book-preview>
@@ -45,5 +46,9 @@ export class WishlistComponent {
 
   removeBook(book: Book) {
     this._wishlist.removeBook(book);
+  }
+
+  addBook() {
+    this._wishlist.addBook(createBook({ name: 'test', price: 3 }));
   }
 }

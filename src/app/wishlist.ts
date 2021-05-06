@@ -21,4 +21,18 @@ export class Wishlist {
   getBookList(): Book[] {
     return this._books;
   }
+
+  update(book: Book, changes: Partial<Book>) {
+    this._books = this._books.map((_book) => {
+      if (_book === book) {
+        /* This is the new book. */
+        return {
+          ...book,
+          ...changes,
+        };
+      }
+
+      return _book;
+    });
+  }
 }
