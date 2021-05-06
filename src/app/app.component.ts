@@ -2,10 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'mc-root',
-  template: `
-    <h1>Hello</h1>
-    <mc-demo></mc-demo>
-    <mc-demo></mc-demo>
-  `,
+  template: ` <mc-wishlist></mc-wishlist> `,
 })
 export class AppComponent {}

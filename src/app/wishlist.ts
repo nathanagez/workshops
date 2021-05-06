@@ -7,7 +7,7 @@ export function createBook(book: Book): Book {
   return book;
 }
 
-export class Cart {
+export class Wishlist {
   private _books: Book[] = [];
 
   addBook(book: Book) {

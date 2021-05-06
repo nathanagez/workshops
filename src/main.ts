@@ -4,6 +4,11 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
+// Uncomment this if you want to add locales.
+// import fr from '@angular/common/locales/fr';
+// import { registerLocaleData } from '@angular/common';
+// registerLocaleData(fr);
+
 if (environment.production) {
   enableProdMode();
 }
