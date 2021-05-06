@@ -1,9 +1,20 @@
 import { Component } from '@angular/core';
 
+enum Color {
+  Blue = 'blue',
+  Orange = 'orange',
+  Red = 'red',
+}
+
 @Component({
   selector: 'mc-demo',
   template: `
-    <button *ngFor="let color of colors" (click)="selectedColor = color">
+    <button (click)="pickNextColor()">Pick Random Color</button>
+    <button
+      *ngFor="let color of colors"
+      [disabled]="color === selectedColor"
+      (click)="selectedColor = color"
+    >
       {{ color }}
     </button>
     <button [disabled]="!canIncrease()" (click)="increment()">+</button>
@@ -24,8 +35,8 @@ import { Component } from '@angular/core';
   ],
 })
 export class DemoComponent {
-  colors = ['red', 'blue'];
-  selectedColor = 'red';
+  colors: Color[] = [Color.Blue, Color.Red, Color.Orange];
+  selectedColor: Color = Color.Red;
   value = 0;
 
   increment() {
@@ -50,5 +61,11 @@ export class DemoComponent {
 
   canReset() {
     return this.value !== 0;
+  }
+
+  pickNextColor() {
+    const nextColorIndex =
+      (this.colors.indexOf(this.selectedColor) + 1) % this.colors.length;
+    this.selectedColor = this.colors[nextColorIndex];
   }
 }
