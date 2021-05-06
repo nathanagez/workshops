@@ -9,22 +9,13 @@ import { Book, createBook, Wishlist } from './wishlist';
       <li *ngFor="let book of getBooks()">
         <span>{{ book.name }}</span>
         <span> - </span>
-        <span class="price">{{ book.price | currency: 'EUR' }}</span>
+        <mc-price [price]="book.price" currency="EUR"></mc-price>
         <button (click)="removeBook(book)">REMOVE</button>
       </li>
     </ul>
     <hr />
-    <div>
-      Total: <span class="price">{{ getTotalPrice() | currency: 'EUR' }}</span>
-    </div>
+    <div>Total: <mc-price [price]="getTotalPrice()"></mc-price></div>
   `,
-  styles: [
-    `
-      .price {
-        font-style: italic;
-      }
-    `,
-  ],
 })
 export class WishlistComponent {
   private _wishlist = new Wishlist();

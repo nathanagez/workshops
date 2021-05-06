@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { DemoComponent } from './demo/demo.component';
 import { WishlistComponent } from './wishlist.component';
 import { ValueComponent } from './demo/value.component';
+import { PriceComponent } from './price.component';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { ValueComponent } from './demo/value.component';
     DemoComponent,
     WishlistComponent,
     ValueComponent,
+    PriceComponent,
   ],
   imports: [BrowserModule],
   providers: [],
