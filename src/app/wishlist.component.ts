@@ -6,12 +6,9 @@ import { Book, createBook, Wishlist } from './wishlist';
   template: `
     <h1>My Wishlist</h1>
     <ul>
-      <li *ngFor="let book of getBooks()">
-        <span>{{ book.name }}</span>
-        <span> - </span>
-        <mc-price [price]="book.price" currency="EUR"></mc-price>
+      <mc-book-preview *ngFor="let book of getBooks()" [book]="book">
         <button (click)="removeBook(book)">REMOVE</button>
-      </li>
+      </mc-book-preview>
     </ul>
     <hr />
     <div>Total: <mc-price [price]="getTotalPrice()"></mc-price></div>
