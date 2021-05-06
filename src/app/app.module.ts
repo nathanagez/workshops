@@ -8,11 +8,13 @@ import { ValueComponent } from './demo/value.component';
 import { PriceComponent } from './price.component';
 import { BookPreviewComponent } from './book-preview.component';
 import { CardComponent } from './card.component';
+import { BookSearchComponent } from './book-seach.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BookPreviewComponent,
+    BookSearchComponent,
     CardComponent,
     DemoComponent,
     WishlistComponent,
