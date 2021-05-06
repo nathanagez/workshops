@@ -1,17 +1,31 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'mc-demo',
   template: `
-    <p>
-      {{ value }}
-    </p>
+    <button *ngFor="let color of colors" (click)="selectedColor = color">
+      {{ color }}
+    </button>
     <button [disabled]="!canIncrease()" (click)="increment()">+</button>
     <button [disabled]="!canDecrease()" (click)="decrement()">-</button>
-    <button (click)="reset()">RESET</button>
+    <button *ngIf="canReset()" (click)="reset()" class="reset-button">
+      RESET
+    </button>
+    <p [style.color]="selectedColor" [style.fontSize.px]="value * 5 + 10">
+      {{ value }}
+    </p>
   `,
+  styles: [
+    `
+      .reset-button {
+        background-color: orange;
+      }
+    `,
+  ],
 })
 export class DemoComponent {
+  colors = ['red', 'blue'];
+  selectedColor = 'red';
   value = 0;
 
   increment() {
@@ -22,6 +36,10 @@ export class DemoComponent {
     this.value--;
   }
 
+  reset() {
+    this.value = 0;
+  }
+
   canDecrease() {
     return this.value > 0;
   }
@@ -30,7 +48,7 @@ export class DemoComponent {
     return this.value < 5;
   }
 
-  reset() {
-    this.value = 0;
+  canReset() {
+    return this.value !== 0;
   }
 }

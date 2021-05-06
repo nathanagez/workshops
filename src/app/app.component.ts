@@ -6,7 +6,6 @@ import { Component } from '@angular/core';
     <h1>Hello</h1>
     <mc-demo></mc-demo>
     <mc-demo></mc-demo>
-  `
+  `,
 })
-export class AppComponent {
-}
+export class AppComponent {}
