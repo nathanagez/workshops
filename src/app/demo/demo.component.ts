@@ -1,10 +1,5 @@
 import { Component } from '@angular/core';
-
-enum Color {
-  Blue = 'blue',
-  Orange = 'orange',
-  Red = 'red',
-}
+import { Color } from './color';
 
 @Component({
   selector: 'mc-demo',
@@ -22,9 +17,7 @@ enum Color {
     <button *ngIf="canReset()" (click)="reset()" class="reset-button">
       RESET
     </button>
-    <p [style.color]="selectedColor" [style.fontSize.px]="value * 5 + 10">
-      {{ value }}
-    </p>
+    <mc-value [color]="selectedColor" [value]="value"></mc-value>
   `,
   styles: [
     `
