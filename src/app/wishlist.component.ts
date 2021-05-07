@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Wishlist } from './wishlist';
 import { Book, createBook } from './book';
 

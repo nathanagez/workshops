@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Book } from './book';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'mc-price',
@@ -14,5 +13,5 @@ import { Book } from './book';
 })
 export class PriceComponent {
   @Input() price: number | null = null;
-  @Input() currency: string = 'EUR';
+  @Input() currency = 'EUR';
 }
