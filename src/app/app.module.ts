@@ -9,6 +9,7 @@ import { PriceComponent } from './price.component';
 import { BookPreviewComponent } from './book-preview.component';
 import { CardComponent } from './card.component';
 import { BookSearchComponent } from './book-seach.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { BookSearchComponent } from './book-seach.component';
     ValueComponent,
     PriceComponent,
   ],
-  imports: [BrowserModule],
+  imports: [BrowserModule, ReactiveFormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
