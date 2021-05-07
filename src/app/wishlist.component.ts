@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Wishlist } from './wishlist';
 import { Book, createBook } from './book';
 
@@ -17,9 +17,7 @@ import { Book, createBook } from './book';
   `,
 })
 export class WishlistComponent {
-  private _wishlist = new Wishlist();
-
-  constructor() {
+  constructor(private _wishlist: Wishlist) {
     this._wishlist.addBook(
       createBook({
         name: 'eXtreme Programming Explained',

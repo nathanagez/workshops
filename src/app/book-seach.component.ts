@@ -14,6 +14,8 @@ import {
   BookSearchQuery,
   PrintType,
 } from './book-repository.service';
+import { Wishlist } from './wishlist';
+import { Book } from './book';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,10 +41,9 @@ import {
       </ng-container>
     </form>
     <hr />
-    <mc-book-preview
-      *ngFor="let book of books$ | async"
-      [book]="book"
-    ></mc-book-preview> `,
+    <mc-book-preview *ngFor="let book of books$ | async" [book]="book">
+      <button (click)="addToWishlist(book)">ADD</button>
+    </mc-book-preview> `,
   styles: [
     `
       input.ng-invalid.ng-touched {
@@ -77,7 +78,10 @@ export class BookSearchComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  constructor(private _bookRepository: BookRepository) {
+  constructor(
+    private _bookRepository: BookRepository,
+    private _wishlist: Wishlist
+  ) {
     this.reset();
   }
 
@@ -85,5 +89,9 @@ export class BookSearchComponent {
     this.formGroup.reset({
       printType: PrintType.All,
     });
+  }
+
+  addToWishlist(book: Book) {
+    this._wishlist.addBook(book);
   }
 }
