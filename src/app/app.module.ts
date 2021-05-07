@@ -10,6 +10,7 @@ import { BookPreviewComponent } from './book-preview.component';
 import { CardComponent } from './card.component';
 import { BookSearchComponent } from './book-seach.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ValueComponent,
     PriceComponent,
   ],
-  imports: [BrowserModule, ReactiveFormsModule],
-  providers: [],
+  imports: [BrowserModule, HttpClientModule, ReactiveFormsModule],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

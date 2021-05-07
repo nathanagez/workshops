@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Book } from './wishlist';
+import { Book } from './book';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

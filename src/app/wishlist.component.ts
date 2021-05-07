@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Book, createBook, Wishlist } from './wishlist';
+import { Wishlist } from './wishlist';
+import { Book, createBook } from './book';
 
 @Component({
   selector: 'mc-wishlist',

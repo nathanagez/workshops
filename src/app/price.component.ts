@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Book } from './wishlist';
+import { Book } from './book';
 
 @Component({
   selector: 'mc-price',

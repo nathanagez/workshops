@@ -1,11 +1,4 @@
-export interface Book {
-  name: string;
-  price: number | null;
-}
-
-export function createBook(book: Book): Book {
-  return book;
-}
+import { Book } from './book';
 
 export class Wishlist {
   private _books: Book[] = [];
