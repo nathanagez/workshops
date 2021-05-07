@@ -1,48 +1,19 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Book, createBook } from './book';
-import { combineLatest, defer, Observable, of, Subscription } from 'rxjs';
+import { of } from 'rxjs';
 import {
   catchError,
-  filter,
   map,
   shareReplay,
   startWith,
   switchMap,
 } from 'rxjs/operators';
-
-enum PrintType {
-  All = 'all',
-  Books = 'books',
-  Magazines = 'magazines',
-}
-
-interface BookSearchQuery {
-  keywords: string;
-  printType: PrintType;
-}
-
-interface VolumeListResponse {
-  items: Array<{
-    volumeInfo: {
-      title: string;
-      imageLinks?: {
-        thumbnail: string;
-      };
-    };
-    saleInfo: {
-      retailPrice?: {
-        amount: number;
-      };
-    };
-  }>;
-}
+import {
+  BookRepository,
+  BookSearchQuery,
+  PrintType,
+} from './book-repository.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,7 +68,7 @@ export class BookSearchComponent {
     })),
     switchMap(({ searchQuery, valid }) => {
       return valid
-        ? this._searchBooks(searchQuery).pipe(
+        ? this._bookRepository.searchBooks(searchQuery).pipe(
             startWith(null),
             catchError(() => of(null))
           )
@@ -106,7 +77,7 @@ export class BookSearchComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  constructor(private _httpClient: HttpClient) {
+  constructor(private _bookRepository: BookRepository) {
     this.reset();
   }
 
@@ -114,26 +85,5 @@ export class BookSearchComponent {
     this.formGroup.reset({
       printType: PrintType.All,
     });
-  }
-
-  private _searchBooks(searchQuery: BookSearchQuery): Observable<Book[]> {
-    return this._httpClient
-      .get<VolumeListResponse>(`https://www.googleapis.com/books/v1/volumes`, {
-        params: {
-          q: searchQuery.keywords,
-          printType: searchQuery.printType,
-        },
-      })
-      .pipe(
-        map((data) =>
-          data.items.map((item) =>
-            createBook({
-              name: item.volumeInfo.title,
-              picture: item.volumeInfo.imageLinks?.thumbnail ?? null,
-              price: item.saleInfo.retailPrice?.amount ?? null,
-            })
-          )
-        )
-      );
   }
 }

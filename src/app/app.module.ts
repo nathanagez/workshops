@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
@@ -11,6 +11,8 @@ import { CardComponent } from './card.component';
 import { BookSearchComponent } from './book-seach.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { BookRepository } from './book-repository.service';
+import { of } from 'rxjs';
 
 @NgModule({
   declarations: [
