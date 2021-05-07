@@ -1,9 +1,21 @@
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Book, createBook } from './book';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { combineLatest, defer, Observable, of, Subscription } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs/operators';
 
 enum PrintType {
   All = 'all',
@@ -33,16 +45,15 @@ interface VolumeListResponse {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'mc-book-search',
-  template: `<form [formGroup]="formGroup" (ngSubmit)="search()">
+  template: `<form [formGroup]="formGroup">
       <input class="keywords" formControlName="keywords" type="text" />
       <select formControlName="printType">
         <option [value]="PrintType.All">All</option>
         <option [value]="PrintType.Books">Books</option>
         <option [value]="PrintType.Magazines">Magazines</option>
       </select>
-
-      <button [disabled]="!formGroup.valid" type="submit">SEARCH</button>
 
       <button type="button" (click)="reset()">RESET</button>
 
@@ -58,7 +69,7 @@ interface VolumeListResponse {
     </form>
     <hr />
     <mc-book-preview
-      *ngFor="let book of books"
+      *ngFor="let book of books$ | async"
       [book]="book"
     ></mc-book-preview> `,
   styles: [
@@ -71,7 +82,6 @@ interface VolumeListResponse {
 })
 export class BookSearchComponent {
   PrintType = PrintType;
-  books: Book[] | null = null;
   formGroup = new FormGroup({
     keywords: new FormControl(null, [
       Validators.required,
@@ -80,13 +90,24 @@ export class BookSearchComponent {
     printType: new FormControl(),
   });
 
+  books$ = this.formGroup.valueChanges.pipe(
+    map((searchQuery: BookSearchQuery) => ({
+      searchQuery,
+      valid: this.formGroup.valid,
+    })),
+    switchMap(({ searchQuery, valid }) => {
+      return valid
+        ? this._searchBooks(searchQuery).pipe(
+            startWith(null),
+            catchError(() => of(null))
+          )
+        : of(null);
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
   constructor(private _httpClient: HttpClient) {
     this.reset();
-  }
-
-  search() {
-    const formData = this.formGroup.value as BookSearchQuery;
-    this._searchBooks(formData).subscribe((books) => (this.books = books));
   }
 
   reset() {
