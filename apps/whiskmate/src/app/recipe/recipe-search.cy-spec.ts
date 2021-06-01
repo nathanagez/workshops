@@ -54,6 +54,7 @@ describe(RecipeSearchComponent.name, () => {
       'Cauliflower, pomegranate and pistachio salad'
     );
     recipeNames.should('have.length', 2);
+    cy.percySnapshot();
   });
 
   it('should filter recipes', () => {
@@ -62,11 +63,13 @@ describe(RecipeSearchComponent.name, () => {
       maxStepCount: 3,
     });
     harness.getRecipeNames().should('have.length', 1);
+    cy.percySnapshot();
   });
 
   it('should disabled recipe once added', () => {
     harness.getFirstRecipeAddButton().isDisabled().should('equal', false);
     harness.getFirstRecipeAddButton().then((harness) => harness.click());
     harness.getFirstRecipeAddButton().isDisabled().should('equal', true);
+    cy.percySnapshot();
   });
 });
