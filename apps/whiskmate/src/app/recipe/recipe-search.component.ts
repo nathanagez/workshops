@@ -17,6 +17,8 @@ import { RecipeRepository } from './recipe-repository.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-search',
   template: `<wm-catalog>
+    <div *ngIf="recipes === undefined" data-role="loading">...</div>
+
     <wm-recipe-preview
       *ngFor="let recipe of recipes; trackBy: trackById"
       [recipe]="recipe"

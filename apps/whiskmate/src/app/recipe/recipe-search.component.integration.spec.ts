@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs';
+import { NEVER, Observable, of } from 'rxjs';
 import { Recipe } from './recipe';
 import { RecipeRepository } from './recipe-repository.service';
 import {
@@ -18,29 +18,40 @@ describe(RecipeSearchComponent.name, () => {
     name: 'Puy lentil and aubergine stew',
   } as Recipe;
 
-  it('should search recipes without keyword on load', async () => {
-    const { fixture, mockRepo } = await createComponent();
+  it('should show loading bar', async () => {
+    const { getRecipeNames, isLoading } = await createComponent({
+      searchResult: NEVER,
+    });
 
-    mockRepo.search.mockReturnValue(of([papperdelle, puyLentil]));
-
-    fixture.detectChanges();
-
-    const names = fixture.debugElement
-      .queryAll(By.css('[data-role=recipe-name]'))
-      .map((el) => el.nativeElement.textContent);
-
-    expect(names).toEqual([
-      'Pappardelle with rose harissa, black olives and capers',
-      'Puy lentil and aubergine stew',
-    ]);
-    expect(mockRepo.search).toBeCalledTimes(1);
-    expect(mockRepo.search).toBeCalledWith();
+    expect(isLoading()).toBe(true);
+    expect(getRecipeNames()).toEqual([]);
   });
 
-  async function createComponent() {
+  it('should hide loading bar on result', async () => {
+    const { isLoading } = await createComponent();
+
+    expect(isLoading()).toBe(false);
+  });
+
+  it('should search recipes without keyword on load', async () => {
+    const { getRecipeNames } = await createComponent();
+
+    expect(getRecipeNames()).toEqual([
+      expect.stringMatching(/^Pappardelle/),
+      expect.stringMatching(/^Puy/),
+    ]);
+  });
+
+  async function createComponent({
+    searchResult,
+  }: { searchResult?: Observable<Recipe[]> } = {}) {
     const mockRepo = { search: jest.fn() } as jest.Mocked<
       Pick<RecipeRepository, 'search'>
     >;
+
+    mockRepo.search.mockReturnValue(
+      searchResult ?? of([papperdelle, puyLentil])
+    );
 
     await TestBed.configureTestingModule({
       imports: [RecipeSearchModule],
@@ -54,10 +65,23 @@ describe(RecipeSearchComponent.name, () => {
 
     const fixture = TestBed.createComponent(RecipeSearchComponent);
 
+    fixture.detectChanges();
+
     return {
       component: fixture.componentInstance,
       fixture,
       mockRepo,
+      isLoading() {
+        return (
+          fixture.debugElement.query(By.css('[data-role="loading"]')) != null
+        );
+      },
+      getRecipeNames() {
+        const elementList = fixture.debugElement.queryAll(
+          By.css('[data-role="recipe-name"]')
+        );
+        return elementList.map((element) => element.nativeElement.textContent);
+      },
     };
   }
 });
