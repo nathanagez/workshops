@@ -32,6 +32,7 @@ describe(RecipeSearchComponent.name, () => {
       'Pappardelle with rose harissa, black olives and capers',
       'Puy lentil and aubergine stew',
     ]);
+
     expect(mockRepo.search).toBeCalledTimes(1);
     expect(mockRepo.search).toBeCalledWith({});
   });

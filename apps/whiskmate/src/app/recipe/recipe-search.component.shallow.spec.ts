@@ -39,6 +39,7 @@ describe(RecipeSearchComponent.name, () => {
     expect(await getRecipePreviewRecipes()).toEqual([papperdelle, puyLentil]);
 
     expect(mockRepo.search).toBeCalledTimes(1);
+
     expect(mockRepo.search).toBeCalledWith({});
   });
 
