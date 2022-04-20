@@ -42,7 +42,10 @@
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
-      "style": "css"
+      "style": "css",
+      "skipTests": false,
+      "inlineStyle": true,
+      "inlineTemplate": true
     }
   },
   "defaultProject": "whiskmate"
