@@ -1,18 +1,18 @@
+import { RecipePreviewModule } from './recipe-preview.component';
+import { CommonModule } from '@angular/common';
 import { Recipe } from './recipe';
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 
 @Component({
   selector: 'wm-meal-planning',
   template: `<h1>Meal Planning</h1>
     <button *ngIf="canUndo()" (click)="undo()">UNDO</button>
-    <ul>
-      <li *ngFor="let recipe of recipes; let first = first; let last = last">
-        <span>{{ recipe.name }}</span>
-        <button [disabled]="first" (click)="moveUp(recipe)">⬆️</button>
-        <button [disabled]="last">⬇️</button>
-        <button (click)="removeRecipe(recipe)">DELETE</button>
-      </li>
-    </ul> `,
+
+    <wm-recipe-preview *ngFor="let recipe of recipes" [recipe]="recipe">
+      <ng-container slot="actions">
+        <button (click)="removeRecipe(recipe)">REMOVE</button>
+      </ng-container>
+    </wm-recipe-preview> `,
 })
 export class MealPlanningComponent {
   recipes: Recipe[] = [
@@ -108,3 +108,10 @@ export class MealPlanningComponent {
     this.recipes = recipes;
   }
 }
+
+@NgModule({
+  declarations: [MealPlanningComponent],
+  exports: [MealPlanningComponent],
+  imports: [CommonModule, RecipePreviewModule],
+})
+export class MealPlanningModule {}
