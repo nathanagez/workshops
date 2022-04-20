@@ -43,7 +43,7 @@
     },
     "@nrwl/angular:component": {
       "style": "css",
-      "skipTests": false,
+      "skipTests": true,
       "inlineStyle": true,
       "inlineTemplate": true
     }
