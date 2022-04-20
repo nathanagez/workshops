@@ -2,6 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'wm-root',
-  template: `<h1>Hello!</h1>`,
+  template: ` <wm-meal-planning> </wm-meal-planning> `,
 })
 export class AppComponent {}
