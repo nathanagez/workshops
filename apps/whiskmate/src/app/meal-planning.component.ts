@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'wm-meal-planning',
   template: `<h1>Meal Planning</h1>
-    <button (click)="undo()">UNDO</button>
+    <button *ngIf="canUndo()" (click)="undo()">UNDO</button>
     <ul>
       <li *ngFor="let recipe of recipes; let first = first; let last = last">
         <span>{{ recipe.name }}</span>
@@ -88,6 +88,10 @@ export class MealPlanningComponent {
   removeRecipe(recipe: Recipe) {
     const recipes = this.recipes.filter((_recipe) => _recipe !== recipe);
     this._updateRecipes(recipes);
+  }
+
+  canUndo() {
+    return this._history.length > 0;
   }
 
   undo() {
