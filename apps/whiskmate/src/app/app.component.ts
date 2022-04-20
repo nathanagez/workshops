@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'whiskmate-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'wm-root',
+  template: `<h1>Hello!</h1>`,
 })
-export class AppComponent {
-  title = 'whiskmate';
-}
+export class AppComponent {}
