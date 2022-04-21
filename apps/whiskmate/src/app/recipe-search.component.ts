@@ -1,13 +1,34 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, NgModule, OnInit } from '@angular/core';
-import { map } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgModule,
+  OnInit,
+} from '@angular/core';
+import {
+  BehaviorSubject,
+  concatMap,
+  debounceTime,
+  exhaustMap,
+  map,
+  mergeMap,
+  Observable,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { Recipe } from './recipe';
 import { RecipePreviewModule } from './recipe-preview.component';
 
 @Component({
   selector: 'wm-recipe-search',
   template: `
+    <input
+      (input)="onKeywordsInput($event)"
+      placeholder="Keywords"
+      type="text"
+    />
+
     <div *ngIf="!recipes">Loading...</div>
 
     <div *ngIf="recipes?.length === 0">No recipes</div>
@@ -20,16 +41,36 @@ import { RecipePreviewModule } from './recipe-preview.component';
 })
 export class RecipeSearchComponent implements OnInit {
   recipes?: Recipe[];
+  recipes$: Observable<Recipe[] | undefined>;
+  private _keywords$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) {
+    this.recipes$ = this._keywords$.pipe(
+      switchMap((keywords) => {
+        let params = new HttpParams();
+        if (keywords != null) {
+          params = params.set('keywords', keywords);
+        }
 
-  async ngOnInit() {
-    this._http
-      .get<RecipeSearchResponse>(
-        'https://ottolenghi-recipes.getsandbox.com/recipes'
-      )
-      .pipe(map((response) => response.items))
-      .subscribe((recipes) => (this.recipes = recipes));
+        return this._http
+          .get<RecipeSearchResponse>(
+            'https://ottolenghi-recipes.getsandbox.com/recipes',
+            {
+              params,
+            }
+          )
+          .pipe(map((response) => response.items));
+      })
+    );
+  }
+
+  ngOnInit() {
+    this.recipes$.subscribe((recipes) => (this.recipes = recipes));
+  }
+
+  onKeywordsInput(event: Event) {
+    const keywords = (event.target as HTMLInputElement).value;
+    this._keywords$.next(keywords);
   }
 }
 
