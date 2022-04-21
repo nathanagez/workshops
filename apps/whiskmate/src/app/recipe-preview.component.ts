@@ -1,6 +1,7 @@
 import { ScoreModule } from './score.component';
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -10,9 +11,10 @@ import {
 import { Recipe } from './recipe';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-preview',
   template: ` <ng-container *ngIf="recipe">
-    <h2 class="title">{{ recipe.name }}</h2>
+    <h2 class="title">{{ getTitle() }}</h2>
 
     <ng-content select="[slot=subtitle]"></ng-content>
 
@@ -46,6 +48,11 @@ import { Recipe } from './recipe';
 export class RecipePreviewComponent {
   @Input() recipe?: Recipe;
   @Output() scoreChange = new EventEmitter<number>();
+
+  getTitle() {
+    console.count('getTitle');
+    return this.recipe?.name;
+  }
 }
 
 @NgModule({

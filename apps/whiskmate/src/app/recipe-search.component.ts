@@ -1,5 +1,13 @@
+import { Observable } from 'rxjs';
+import { MealPlanner } from './meal-planner.service';
 import { CommonModule } from '@angular/common';
-import { Component, NgModule, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgModule,
+  OnInit,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { Suspense, suspensify } from '@jscutlery/operators';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { Recipe } from './recipe';
@@ -10,36 +18,44 @@ import { RecipePreviewModule } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-search',
   template: `
     <wm-recipe-filter (filterChange)="updateFilter($event)"></wm-recipe-filter>
 
-    <div *ngIf="result?.pending">Loading...</div>
+    <ng-container *ngIf="result$ | async as result">
+      <div *ngIf="result.pending">Loading...</div>
 
-    <div *ngIf="result?.error">Oups! 😭</div>
+      <div *ngIf="result.error">Oups! 😭</div>
 
-    <div *ngIf="result?.value?.length === 0">No recipes</div>
+      <div *ngIf="result.value?.length === 0">No recipes</div>
 
-    <wm-recipe-preview
-      *ngFor="let recipe of result?.value"
-      [recipe]="recipe"
-    ></wm-recipe-preview>
+      <wm-recipe-preview *ngFor="let recipe of result.value" [recipe]="recipe">
+        <ng-container slot="actions">
+          <button (click)="addRecipe(recipe)">ADD</button>
+        </ng-container>
+      </wm-recipe-preview>
+    </ng-container>
   `,
 })
-export class RecipeSearchComponent implements OnInit {
-  result?: Suspense<Recipe[]>;
+export class RecipeSearchComponent {
+  result$: Observable<Suspense<Recipe[]>>;
+
   private _filter$ = new BehaviorSubject<RecipeFilter | null>(null);
 
-  constructor(private _recipeRepository: RecipeRepository) {}
-
-  ngOnInit() {
-    this._filter$
-      .pipe(
-        switchMap((filter) =>
-          this._recipeRepository.search(filter).pipe(suspensify())
-        )
+  constructor(
+    private _mealPlanner: MealPlanner,
+    private _recipeRepository: RecipeRepository
+  ) {
+    this.result$ = this._filter$.pipe(
+      switchMap((filter) =>
+        this._recipeRepository.search(filter).pipe(suspensify())
       )
-      .subscribe((result) => (this.result = result));
+    );
+  }
+
+  addRecipe(recipe: Recipe) {
+    this._mealPlanner.addRecipe(recipe);
   }
 
   updateFilter(filter: RecipeFilter | null) {
