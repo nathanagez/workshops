@@ -1,6 +1,7 @@
+import { RecipeFilter } from './recipe-filter';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import { Recipe } from './recipe';
 
 @Injectable({
@@ -9,20 +10,29 @@ import { Recipe } from './recipe';
 export class RecipeRepository {
   constructor(private _http: HttpClient) {}
 
-  search({ keywords }: { keywords?: string }): Observable<Recipe[]> {
-    let params = new HttpParams();
-    if (keywords != null) {
-      params = params.set('keywords', keywords);
-    }
-
+  search(filter?: RecipeFilter | null): Observable<Recipe[]> {
     return this._http
       .get<RecipeSearchResponse>(
         'https://ottolenghi-recipes.getsandbox.com/recipes',
         {
-          params,
+          params: this._filterToParams(filter),
         }
       )
       .pipe(map((response) => response.items));
+  }
+
+  private _filterToParams(filter?: RecipeFilter | null) {
+    if (filter == null) {
+      return undefined;
+    }
+
+    const { keywords, maxIngredients, maxSteps } = filter;
+
+    return {
+      ...(keywords != null ? { keywords } : {}),
+      ...(maxIngredients != null ? { max_ingredients: maxIngredients } : {}),
+      ...(maxSteps != null ? { max_steps: maxSteps } : {}),
+    };
   }
 }
 

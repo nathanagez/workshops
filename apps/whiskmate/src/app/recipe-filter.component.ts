@@ -8,18 +8,19 @@ import {
 } from '@angular/core';
 import {
   AbstractControl,
-  FormArray,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { map, Observable } from 'rxjs';
+import { RecipeFilter } from './recipe-filter';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-filter',
   template: `
-    <form [formGroup]="filterForm">
+    <form [formGroup]="filterForm" (ngSubmit)="submit()">
       <input formControlName="keywords" placeholder="Keywords" type="text" />
       <input
         formControlName="maxIngredients"
@@ -42,12 +43,18 @@ import {
           <li>Please set some criteria.</li>
         </ng-container>
       </ul>
+
+      <button [disabled]="filterForm.invalid" type="submit">SEARCH</button>
+      <button type="reset">RESET</button>
     </form>
   `,
 })
 export class RecipeFilterComponent {
-  @Output() filterChange = new EventEmitter<Filter>();
-  @Output() filterSubmit = new EventEmitter<Filter>();
+  /**
+   * Emits null if form is invalid.
+   */
+  @Output() filterChange: Observable<RecipeFilter | null>;
+  @Output() filterSubmit = new EventEmitter<RecipeFilter>();
 
   keywordsCtrl = new FormControl(null, [Validators.minLength(3)]);
   filterForm = new FormGroup(
@@ -60,9 +67,17 @@ export class RecipeFilterComponent {
   );
 
   constructor() {
-    this.filterForm.valueChanges.subscribe((value) => {
-      console.log(value);
-    });
+    this.filterChange = this._getValueChanges().pipe(
+      map((value) => (this.filterForm.valid ? value : null))
+    );
+  }
+
+  submit() {
+    this.filterSubmit.emit(this.filterForm.value);
+  }
+
+  private _getValueChanges(): Observable<RecipeFilter> {
+    return this.filterForm.valueChanges;
   }
 }
 
@@ -72,12 +87,6 @@ export class RecipeFilterComponent {
   imports: [CommonModule, ReactiveFormsModule],
 })
 export class RecipeFilterModule {}
-
-export interface Filter {
-  keywords?: string;
-  maxIngredients?: number;
-  maxSteps?: number;
-}
 
 export const someRequired =
   (controlNames: string[]) => (formGroup: AbstractControl) => {

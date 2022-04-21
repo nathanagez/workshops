@@ -1,52 +1,60 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
+import { Suspense, suspensify } from '@jscutlery/operators';
 import { BehaviorSubject, switchMap } from 'rxjs';
 import { Recipe } from './recipe';
+import { RecipeFilter } from './recipe-filter';
+import { RecipeFilterModule } from './recipe-filter.component';
+import { RecipePreviewV2Module } from './recipe-preview-v2.component';
 import { RecipePreviewModule } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
   selector: 'wm-recipe-search',
   template: `
-    <input
-      (input)="onKeywordsInput($event)"
-      placeholder="Keywords"
-      type="text"
-    />
+    <wm-recipe-filter (filterChange)="updateFilter($event)"></wm-recipe-filter>
 
-    <div *ngIf="!recipes">Loading...</div>
+    <div *ngIf="result?.pending">Loading...</div>
 
-    <div *ngIf="recipes?.length === 0">No recipes</div>
+    <div *ngIf="result?.error">Oups! 😭</div>
+
+    <div *ngIf="result?.value?.length === 0">No recipes</div>
 
     <wm-recipe-preview
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of result?.value"
       [recipe]="recipe"
     ></wm-recipe-preview>
   `,
 })
 export class RecipeSearchComponent implements OnInit {
-  recipes?: Recipe[];
-  private _keywords$ = new BehaviorSubject<string | undefined>(undefined);
+  result?: Suspense<Recipe[]>;
+  private _filter$ = new BehaviorSubject<RecipeFilter | null>(null);
 
   constructor(private _recipeRepository: RecipeRepository) {}
 
   ngOnInit() {
-    this._keywords$
+    this._filter$
       .pipe(
-        switchMap((keywords) => this._recipeRepository.search({ keywords }))
+        switchMap((filter) =>
+          this._recipeRepository.search(filter).pipe(suspensify())
+        )
       )
-      .subscribe((recipes) => (this.recipes = recipes));
+      .subscribe((result) => (this.result = result));
   }
 
-  onKeywordsInput(event: Event) {
-    const keywords = (event.target as HTMLInputElement).value;
-    this._keywords$.next(keywords);
+  updateFilter(filter: RecipeFilter | null) {
+    this._filter$.next(filter);
   }
 }
 
 @NgModule({
   declarations: [RecipeSearchComponent],
   exports: [RecipeSearchComponent],
-  imports: [CommonModule, RecipePreviewModule],
+  imports: [
+    CommonModule,
+    RecipePreviewModule,
+    RecipePreviewV2Module,
+    RecipeFilterModule,
+  ],
 })
 export class RecipeSearchModule {}

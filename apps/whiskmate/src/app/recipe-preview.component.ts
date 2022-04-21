@@ -11,7 +11,7 @@ import { Recipe } from './recipe';
 
 @Component({
   selector: 'wm-recipe-preview',
-  template: `<ng-container *ngIf="recipe">
+  template: ` <ng-container *ngIf="recipe">
     <h2 class="title">{{ recipe.name }}</h2>
 
     <ng-content select="[slot=subtitle]"></ng-content>
