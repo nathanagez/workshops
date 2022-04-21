@@ -9,7 +9,7 @@ import { Recipe } from './recipe';
 export class RecipeRepository {
   constructor(private _http: HttpClient) {}
 
-  search(keywords?: string): Observable<Recipe[]> {
+  search({ keywords }: { keywords?: string }): Observable<Recipe[]> {
     let params = new HttpParams();
     if (keywords != null) {
       params = params.set('keywords', keywords);

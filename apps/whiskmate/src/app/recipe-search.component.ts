@@ -32,7 +32,9 @@ export class RecipeSearchComponent implements OnInit {
 
   ngOnInit() {
     this._keywords$
-      .pipe(switchMap((keywords) => this._recipeRepository.search(keywords)))
+      .pipe(
+        switchMap((keywords) => this._recipeRepository.search({ keywords }))
+      )
       .subscribe((recipes) => (this.recipes = recipes));
   }
 
