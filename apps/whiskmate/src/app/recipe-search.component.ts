@@ -1,24 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  NgModule,
-  OnInit,
-} from '@angular/core';
-import {
-  BehaviorSubject,
-  concatMap,
-  debounceTime,
-  exhaustMap,
-  map,
-  mergeMap,
-  Observable,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { Component, NgModule, OnInit } from '@angular/core';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { Recipe } from './recipe';
 import { RecipePreviewModule } from './recipe-preview.component';
+import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
   selector: 'wm-recipe-search',
@@ -41,53 +26,20 @@ import { RecipePreviewModule } from './recipe-preview.component';
 })
 export class RecipeSearchComponent implements OnInit {
   recipes?: Recipe[];
-  recipes$: Observable<Recipe[] | undefined>;
-  private _keywords$ = new BehaviorSubject<string | null>(null);
+  private _keywords$ = new BehaviorSubject<string | undefined>(undefined);
 
-  constructor(private _http: HttpClient) {
-    this.recipes$ = this._keywords$.pipe(
-      switchMap((keywords) => {
-        let params = new HttpParams();
-        if (keywords != null) {
-          params = params.set('keywords', keywords);
-        }
-
-        return this._http
-          .get<RecipeSearchResponse>(
-            'https://ottolenghi-recipes.getsandbox.com/recipes',
-            {
-              params,
-            }
-          )
-          .pipe(map((response) => response.items));
-      })
-    );
-  }
+  constructor(private _recipeRepository: RecipeRepository) {}
 
   ngOnInit() {
-    this.recipes$.subscribe((recipes) => (this.recipes = recipes));
+    this._keywords$
+      .pipe(switchMap((keywords) => this._recipeRepository.search(keywords)))
+      .subscribe((recipes) => (this.recipes = recipes));
   }
 
   onKeywordsInput(event: Event) {
     const keywords = (event.target as HTMLInputElement).value;
     this._keywords$.next(keywords);
   }
-}
-
-interface RecipeSearchResponse {
-  items: RecipeDto[];
-}
-
-interface RecipeDto {
-  id: string;
-  name: string;
-  ingredients: IngredientDto[];
-  steps: string[];
-}
-
-interface IngredientDto {
-  id: string;
-  name: string;
 }
 
 @NgModule({
