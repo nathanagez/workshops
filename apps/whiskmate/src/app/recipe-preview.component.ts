@@ -9,6 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { Recipe } from './recipe';
+import { RouterModule } from '@angular/router';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,7 +51,6 @@ export class RecipePreviewComponent {
   @Output() scoreChange = new EventEmitter<number>();
 
   getTitle() {
-    console.count('getTitle');
     return this.recipe?.name;
   }
 }

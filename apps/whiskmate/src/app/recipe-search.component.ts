@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { MealPlanner } from './meal-planner.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -24,7 +24,7 @@ import { RecipeRepository } from './recipe-repository.service';
     <wm-recipe-filter (filterChange)="updateFilter($event)"></wm-recipe-filter>
 
     <ng-container *ngIf="result$ | async as result">
-      <div *ngIf="result.pending">Loading...</div>
+      <div data-role="loading-message" *ngIf="result.pending">Loading...</div>
 
       <div *ngIf="result.error">Oups! 😭</div>
 
