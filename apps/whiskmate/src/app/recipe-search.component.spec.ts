@@ -1,24 +1,24 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { EMPTY, of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { Recipe } from './recipe';
 import { RecipeRepository } from './recipe-repository.service';
 import { RecipeSearchComponent } from './recipe-search.component';
 
 describe(RecipeSearchComponent.name, () => {
-  xit('should display "Loading..."', async () => {
-    const { mockRepo, render, isLoadingDisplayed } = await createComponent();
+  it('should display "Loading..."', async () => {
+    const { mockRepo, render, isLoadingDisplayed } = createComponent();
 
-    mockRepo.search.mockReturnValue(EMPTY);
+    mockRepo.search.mockReturnValue(NEVER);
 
     render();
 
     expect(isLoadingDisplayed()).toBe(true);
   });
 
-  it('should load recipes on startup', async () => {
-    const { mockRepo, render, getDisplayedRecipes } = await createComponent();
+  it('should load recipes on startup', () => {
+    const { mockRepo, render, getDisplayedRecipes } = createComponent();
     const burger = { id: 'burger', name: 'Burger' } as Recipe;
     const pizza = { id: 'pizza', name: 'Pizza' } as Recipe;
 
@@ -39,7 +39,7 @@ describe(RecipeSearchComponent.name, () => {
     expect(mockRepo.search).toBeCalledWith(null);
   });
 
-  it('🚧 should search recipes on filter change', () => {
+  xit('🚧 should search recipes on filter change', () => {
     // fixture.query(By.css('wm-recipe-filter')).triggerEventHandler('filterChange', {});
     // fixture.detectChanges();
   });
@@ -48,12 +48,12 @@ describe(RecipeSearchComponent.name, () => {
 
   it.todo('🚧 should still work after error');
 
-  async function createComponent() {
+  function createComponent() {
     const mockRepo: jest.Mocked<Pick<RecipeRepository, 'search'>> = {
       search: jest.fn(),
     };
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       declarations: [RecipeSearchComponent],
       providers: [
         {
@@ -62,7 +62,7 @@ describe(RecipeSearchComponent.name, () => {
         },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+    });
 
     let fixture: ComponentFixture<RecipeSearchComponent>;
 
@@ -71,7 +71,6 @@ describe(RecipeSearchComponent.name, () => {
       render() {
         fixture = TestBed.createComponent(RecipeSearchComponent);
         fixture.detectChanges();
-        console.log(fixture.debugElement.nativeElement.innerHTML);
       },
       isLoadingDisplayed() {
         return (
