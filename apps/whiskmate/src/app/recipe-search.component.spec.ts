@@ -1,52 +1,120 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NEVER, of } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { Recipe } from './recipe';
+import { RecipeFilter } from './recipe-filter';
 import { RecipeRepository } from './recipe-repository.service';
 import { RecipeSearchComponent } from './recipe-search.component';
 
 describe(RecipeSearchComponent.name, () => {
-  it('should display "Loading..."', async () => {
-    const { mockRepo, render, isLoadingDisplayed } = createComponent();
+  const burger = { id: 'burger', name: 'Burger' } as Recipe;
+  const pizza = { id: 'pizza', name: 'Pizza' } as Recipe;
 
-    mockRepo.search.mockReturnValue(NEVER);
+  describe('startup', () => {
+    it('should display "Loading..."', async () => {
+      const { mockRepo, render, isLoadingDisplayed } = createComponent();
 
-    render();
+      mockRepo.search.mockReturnValue(NEVER);
 
-    expect(isLoadingDisplayed()).toBe(true);
+      render();
+
+      expect(isLoadingDisplayed()).toBe(true);
+    });
+
+    it('should load recipes', () => {
+      const { mockRepo, getDisplayedRecipes } = renderWithRecipes();
+
+      expect(getDisplayedRecipes()).toEqual([
+        expect.objectContaining({
+          name: 'Burger',
+        }),
+        expect.objectContaining({
+          name: 'Pizza',
+        }),
+      ]);
+
+      expect(mockRepo.search).toBeCalledTimes(1);
+      expect(mockRepo.search).toBeCalledWith(null);
+    });
+
+    it('should hide loading bar when recipes are loaded', () => {
+      const { isLoadingDisplayed } = renderWithRecipes();
+      expect(isLoadingDisplayed()).toBe(false);
+    });
   });
 
-  it('should load recipes on startup', () => {
-    const { mockRepo, render, getDisplayedRecipes } = createComponent();
-    const burger = { id: 'burger', name: 'Burger' } as Recipe;
-    const pizza = { id: 'pizza', name: 'Pizza' } as Recipe;
+  describe('filtering', () => {
+    it('should search recipes on filter change', () => {
+      const { mockRepo, render, getDisplayedRecipes, updateFilter } =
+        createComponent();
+
+      mockRepo.search.mockImplementation((filter) => {
+        if (filter?.keywords === 'Burger') {
+          return of([burger]);
+        }
+
+        return of([burger, pizza]);
+      });
+
+      render();
+
+      updateFilter({ keywords: 'Burger' });
+
+      expect(getDisplayedRecipes()).toEqual([
+        expect.objectContaining({
+          name: 'Burger',
+        }),
+      ]);
+
+      expect(mockRepo.search).toBeCalledTimes(2);
+      expect(mockRepo.search).nthCalledWith(2, { keywords: 'Burger' });
+    });
+  });
+
+  describe('with error', () => {
+    it('should show error message on error', () => {
+      const { getDisplayedRecipes, isErrorDisplayed } = renderWithSearchError();
+
+      expect(getDisplayedRecipes()).toEqual([]);
+      expect(isErrorDisplayed()).toBe(true);
+    });
+
+    it('should hide loading message on error', () => {
+      const { isLoadingDisplayed } = renderWithSearchError();
+
+      expect(isLoadingDisplayed()).toBe(false);
+    });
+
+    it('should still work after error', () => {
+      const { mockRepo, updateFilter } = renderWithSearchError();
+
+      updateFilter(null);
+
+      /* Make sure repo.search is called again when filter changes. */
+      expect(mockRepo.search).toBeCalledTimes(2);
+    });
+  });
+
+  function renderWithRecipes() {
+    const { mockRepo, render, ...utils } = createComponent();
 
     mockRepo.search.mockReturnValue(of([burger, pizza]));
 
     render();
 
-    expect(getDisplayedRecipes()).toEqual([
-      expect.objectContaining({
-        name: 'Burger',
-      }),
-      expect.objectContaining({
-        name: 'Pizza',
-      }),
-    ]);
+    return { mockRepo, ...utils };
+  }
 
-    expect(mockRepo.search).toBeCalledTimes(1);
-    expect(mockRepo.search).toBeCalledWith(null);
-  });
+  function renderWithSearchError() {
+    const { mockRepo, render, ...utils } = createComponent();
 
-  xit('🚧 should search recipes on filter change', () => {
-    // fixture.query(By.css('wm-recipe-filter')).triggerEventHandler('filterChange', {});
-    // fixture.detectChanges();
-  });
+    mockRepo.search.mockReturnValue(throwError(() => new Error('💥')));
 
-  it.todo('🚧 should show error message on error');
+    render();
 
-  it.todo('🚧 should still work after error');
+    return { mockRepo, ...utils };
+  }
 
   function createComponent() {
     const mockRepo: jest.Mocked<Pick<RecipeRepository, 'search'>> = {
@@ -72,6 +140,12 @@ describe(RecipeSearchComponent.name, () => {
         fixture = TestBed.createComponent(RecipeSearchComponent);
         fixture.detectChanges();
       },
+      isErrorDisplayed() {
+        return (
+          fixture.debugElement.query(By.css('[data-role="error-message"]')) !=
+          null
+        );
+      },
       isLoadingDisplayed() {
         return (
           fixture.debugElement.query(By.css('[data-role="loading-message"]')) !=
@@ -82,6 +156,12 @@ describe(RecipeSearchComponent.name, () => {
         return fixture.debugElement
           .queryAll(By.css('wm-recipe-preview'))
           .map((el) => el.properties['recipe']);
+      },
+      updateFilter(filter: RecipeFilter | null) {
+        fixture.debugElement
+          .query(By.css('wm-recipe-filter'))
+          .triggerEventHandler('filterChange', filter);
+        fixture.detectChanges();
       },
     };
   }

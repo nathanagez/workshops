@@ -26,7 +26,7 @@ import { RecipeRepository } from './recipe-repository.service';
     <ng-container *ngIf="result$ | async as result">
       <div data-role="loading-message" *ngIf="result.pending">Loading...</div>
 
-      <div *ngIf="result.error">Oups! 😭</div>
+      <div data-role="error-message" *ngIf="result.error">Oups! 😭</div>
 
       <div *ngIf="result.value?.length === 0">No recipes</div>
 
