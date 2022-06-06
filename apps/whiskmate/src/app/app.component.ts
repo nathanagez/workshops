@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'workshop-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  standalone: true,
+  selector: 'wm-app',
+  template: `<h1>👨🏻‍🍳 Welcome to {{ title }}</h1>`,
 })
 export class AppComponent {
   title = 'whiskmate';

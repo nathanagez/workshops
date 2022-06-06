@@ -1,7 +1,7 @@
 {
   "projectType": "application",
   "sourceRoot": "apps/whiskmate/src",
-  "prefix": "workshop",
+  "prefix": "wm",
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
