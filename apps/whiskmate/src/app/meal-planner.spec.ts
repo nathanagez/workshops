@@ -1,30 +1,6 @@
-/* eslint-disable no-undef */
+import { MealPlanner } from './meal-planner';
 
-class MealPlanner {
-  _recipes = [];
-
-  addRecipe(recipe) {
-    if (this._contains(recipe)) {
-      throw new Error('Duplicate recipe error.');
-    }
-
-    this._recipes = [...this._recipes, recipe];
-  }
-
-  getRecipes() {
-    return this._recipes;
-  }
-
-  removeRecipe(recipeId) {
-    this._recipes = this._recipes.filter((recipe) => recipe.id !== recipeId);
-  }
-
-  _contains(recipe) {
-    return this._recipes.findIndex((_recipe) => _recipe.id === recipe.id) >= 0;
-  }
-}
-
-describe('MealPlanner', () => {
+describe(MealPlanner.name, () => {
   it('should add recipes', () => {
     const { mealPlanner, createBurger, createPizza } = setUp();
 
