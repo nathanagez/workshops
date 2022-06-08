@@ -15,6 +15,13 @@ export class MealPlanner {
     return this._recipes;
   }
 
+  /**
+   * @deprecated 🚧 Work in progress.
+   */
+  moveDown(recipeId: string) {
+    throw new Error('🚧 Work in progress!');
+  }
+
   moveUp(recipeId: string) {
     const recipeIndex = this._recipes.findIndex(
       (recipe) => recipe.id === recipeId

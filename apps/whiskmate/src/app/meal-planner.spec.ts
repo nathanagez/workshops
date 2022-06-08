@@ -67,6 +67,30 @@ describe(MealPlanner.name, () => {
     ]);
   });
 
+  xit('should move down recipes', () => {
+    const { mealPlanner } = setUpWithRecipes();
+
+    mealPlanner.moveDown('burger');
+
+    expect(mealPlanner.getRecipes()).toEqual([
+      expect.objectContaining({ id: 'pizza' }),
+      expect.objectContaining({ id: 'burger' }),
+      expect.objectContaining({ id: 'salad' }),
+    ]);
+  });
+
+  xit('should not change recipes on last recipe move down', () => {
+    const { mealPlanner } = setUpWithRecipes();
+
+    mealPlanner.moveDown('salad');
+
+    expect(mealPlanner.getRecipes()).toEqual([
+      expect.objectContaining({ id: 'burger' }),
+      expect.objectContaining({ id: 'pizza' }),
+      expect.objectContaining({ id: 'salad' }),
+    ]);
+  });
+
   function setUpWithRecipes() {
     const { mealPlanner } = setUp();
     mealPlanner.addRecipe(RecipeMother.withName('Burger').value);
