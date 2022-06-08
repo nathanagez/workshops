@@ -67,7 +67,7 @@ describe(MealPlanner.name, () => {
     ]);
   });
 
-  xit('should move down recipes', () => {
+  it('should move down recipes', () => {
     const { mealPlanner } = setUpWithRecipes();
 
     mealPlanner.moveDown('burger');
@@ -79,7 +79,7 @@ describe(MealPlanner.name, () => {
     ]);
   });
 
-  xit('should not change recipes on last recipe move down', () => {
+  it('should not change recipes on last recipe move down', () => {
     const { mealPlanner } = setUpWithRecipes();
 
     mealPlanner.moveDown('salad');

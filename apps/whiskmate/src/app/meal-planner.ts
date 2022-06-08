@@ -19,7 +19,24 @@ export class MealPlanner {
    * @deprecated 🚧 Work in progress.
    */
   moveDown(recipeId: string) {
-    throw new Error('🚧 Work in progress!');
+    const recipeIndex = this._recipes.findIndex(
+      (recipe) => recipe.id === recipeId
+    );
+
+    if (recipeIndex === this._recipes.length - 1) {
+      return;
+    }
+
+    const previousRecipes = this._recipes.slice(0, recipeIndex);
+    const recipe = this._recipes[recipeIndex];
+    const swappedRecipe = this._recipes[recipeIndex + 1];
+    const nextRecipes = this._recipes.slice(recipeIndex + 2);
+    this._updateRecipes([
+      ...previousRecipes,
+      swappedRecipe,
+      recipe,
+      ...nextRecipes,
+    ]);
   }
 
   moveUp(recipeId: string) {
