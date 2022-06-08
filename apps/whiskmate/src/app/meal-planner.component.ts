@@ -1,3 +1,4 @@
+import { RecipePreviewComponent } from './recipe-preview.component';
 import { MealPlanner } from './meal-planner';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -6,20 +7,20 @@ import { createRecipe } from './recipe';
 @Component({
   standalone: true,
   selector: 'wm-meal-planner',
-  imports: [CommonModule],
+  imports: [CommonModule, RecipePreviewComponent],
   template: `
-    <div
+    <wm-recipe-preview
       *ngFor="let recipe of getRecipes(); let first = first; let last = last"
+      [recipe]="recipe"
     >
-      <span>{{ recipe.name }}</span>
       <button type="button" [disabled]="first" (click)="moveUp(recipe.id)">
         ⬆️
       </button>
       <button type="button" [disabled]="last" (click)="moveDown(recipe.id)">
         ⬇️
       </button>
-      <button type="button" (click)="remove(recipe.id)">REMOVE</button>
-    </div>
+      <button type="button" (click)="remove(recipe.id)">🗑</button>
+    </wm-recipe-preview>
   `,
 })
 export class MealPlannerComponent {
