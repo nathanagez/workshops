@@ -43,7 +43,7 @@ describe(MealPlanner.name, () => {
     );
   });
 
-  xit('should move up recipes', () => {
+  it('should move up recipes', () => {
     const { mealPlanner } = setUpWithRecipes();
 
     mealPlanner.moveUp('salad');
@@ -55,7 +55,7 @@ describe(MealPlanner.name, () => {
     ]);
   });
 
-  xit('should not change recipes on first recipe move up', () => {
+  it('should not change recipes on first recipe move up', () => {
     const { mealPlanner } = setUpWithRecipes();
 
     mealPlanner.moveUp('burger');
@@ -63,6 +63,7 @@ describe(MealPlanner.name, () => {
     expect(mealPlanner.getRecipes()).toEqual([
       expect.objectContaining({ id: 'burger' }),
       expect.objectContaining({ id: 'pizza' }),
+      expect.objectContaining({ id: 'salad' }),
     ]);
   });
 
