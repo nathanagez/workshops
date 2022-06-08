@@ -28,6 +28,11 @@ import { Recipe } from './recipe';
       .actions {
         display: flex;
         gap: 10px;
+        opacity: 0.5;
+      }
+
+      :host:hover .actions {
+        opacity: 1;
       }
     `,
   ],
