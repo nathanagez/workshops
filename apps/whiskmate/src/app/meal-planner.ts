@@ -15,9 +15,6 @@ export class MealPlanner {
     return this._recipes;
   }
 
-  /**
-   * @deprecated 🚧 Work in progress.
-   */
   moveDown(recipeId: string) {
     const recipeIndex = this._recipes.findIndex(
       (recipe) => recipe.id === recipeId
@@ -27,16 +24,7 @@ export class MealPlanner {
       return;
     }
 
-    const previousRecipes = this._recipes.slice(0, recipeIndex);
-    const recipe = this._recipes[recipeIndex];
-    const swappedRecipe = this._recipes[recipeIndex + 1];
-    const nextRecipes = this._recipes.slice(recipeIndex + 2);
-    this._updateRecipes([
-      ...previousRecipes,
-      swappedRecipe,
-      recipe,
-      ...nextRecipes,
-    ]);
+    this._swap(recipeIndex, recipeIndex + 1);
   }
 
   moveUp(recipeId: string) {
@@ -48,16 +36,7 @@ export class MealPlanner {
       return;
     }
 
-    const previousRecipes = this._recipes.slice(0, recipeIndex - 1);
-    const swappedRecipe = this._recipes[recipeIndex - 1];
-    const recipe = this._recipes[recipeIndex];
-    const nextRecipes = this._recipes.slice(recipeIndex + 1);
-    this._updateRecipes([
-      ...previousRecipes,
-      recipe,
-      swappedRecipe,
-      ...nextRecipes,
-    ]);
+    this._swap(recipeIndex, recipeIndex - 1);
   }
 
   removeRecipe(recipeId: string) {
@@ -70,5 +49,21 @@ export class MealPlanner {
 
   private _updateRecipes(recipes: Recipe[]) {
     this._recipes = recipes;
+  }
+
+  private _swap(srcIndex: number, dstIndex: number) {
+    this._updateRecipes(
+      this._recipes.map((recipe, index) => {
+        if (index === srcIndex) {
+          return this._recipes[dstIndex];
+        }
+
+        if (index === dstIndex) {
+          return this._recipes[srcIndex];
+        }
+
+        return recipe;
+      })
+    );
   }
 }
