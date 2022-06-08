@@ -1,8 +1,8 @@
-import { RecipePreviewComponent } from './recipe-preview.component';
-import { MealPlanner } from './meal-planner';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { MealPlanner } from './meal-planner';
 import { createRecipe } from './recipe';
+import { RecipePreviewComponent } from './recipe-preview.component';
 
 @Component({
   standalone: true,
