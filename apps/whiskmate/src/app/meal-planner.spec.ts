@@ -1,15 +1,16 @@
 import { MealPlanner } from './meal-planner';
+import { createRecipe } from './recipe';
 
 describe(MealPlanner.name, () => {
   it('should add recipes', () => {
     const { mealPlanner, createBurger, createPizza } = setUp();
 
     const emptyRecipes = mealPlanner.getRecipes();
-    expect(emptyRecipes).toEqual([]);
 
     mealPlanner.addRecipe(createBurger());
     mealPlanner.addRecipe(createPizza());
 
+    expect(emptyRecipes).toEqual([]);
     expect(mealPlanner.getRecipes()).toEqual([
       {
         id: 'burger',
@@ -33,10 +34,8 @@ describe(MealPlanner.name, () => {
   });
 
   it('should remove recipes', () => {
-    const { mealPlanner, createBurger, createPizza } = setUp();
+    const { mealPlanner } = setUpWithRecipes();
 
-    mealPlanner.addRecipe(createBurger());
-    mealPlanner.addRecipe(createPizza());
     mealPlanner.removeRecipe('burger');
 
     expect(mealPlanner.getRecipes()).toEqual([
@@ -47,13 +46,42 @@ describe(MealPlanner.name, () => {
     ]);
   });
 
+  xit('should move up recipes', () => {
+    const { mealPlanner } = setUpWithRecipes();
+
+    mealPlanner.moveUp('pizza');
+
+    expect(mealPlanner.getRecipes()).toEqual([
+      expect.objectContaining({ id: 'pizza' }),
+      expect.objectContaining({ id: 'burger' }),
+    ]);
+  });
+
+  xit('should not change recipes on first recipe move up', () => {
+    const { mealPlanner } = setUpWithRecipes();
+
+    mealPlanner.moveUp('burger');
+
+    expect(mealPlanner.getRecipes()).toEqual([
+      expect.objectContaining({ id: 'burger' }),
+      expect.objectContaining({ id: 'pizza' }),
+    ]);
+  });
+
+  function setUpWithRecipes() {
+    const { mealPlanner, createBurger, createPizza } = setUp();
+    mealPlanner.addRecipe(createBurger());
+    mealPlanner.addRecipe(createPizza());
+    return { mealPlanner };
+  }
+
   function setUp() {
     return {
       createBurger() {
-        return { id: 'burger', name: 'Burger' };
+        return createRecipe({ id: 'burger', name: 'Burger' });
       },
       createPizza() {
-        return { id: 'pizza', name: 'Pizza' };
+        return createRecipe({ id: 'pizza', name: 'Pizza' });
       },
       mealPlanner: new MealPlanner(),
     };
