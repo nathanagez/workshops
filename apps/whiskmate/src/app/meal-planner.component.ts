@@ -27,9 +27,30 @@ export class MealPlannerComponent {
   mealPlanner = new MealPlanner();
 
   constructor() {
-    this.mealPlanner.addRecipe(createRecipe({ id: 'burger', name: 'Burger' }));
-    this.mealPlanner.addRecipe(createRecipe({ id: 'pizza', name: 'Pizza' }));
-    this.mealPlanner.addRecipe(createRecipe({ id: 'salad', name: 'Salad' }));
+    this.mealPlanner.addRecipe(
+      createRecipe({
+        id: 'burger',
+        name: 'Burger',
+        pictureUri:
+          'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/102cf51c-9220-4278-8b63-2b9611ad275e/Derivates/3831dbe2-352e-4409-a2e2-fc87d11cab0a.jpg',
+      })
+    );
+    this.mealPlanner.addRecipe(
+      createRecipe({
+        id: 'pizza',
+        name: 'Pizza',
+        pictureUri:
+          'https://assets.afcdn.com/recipe/20200206/107152_w1024h1024c1cx176cy267cxb353cyb535.jpg',
+      })
+    );
+    this.mealPlanner.addRecipe(
+      createRecipe({
+        id: 'salad',
+        name: 'Salad',
+        pictureUri:
+          'https://cdn.loveandlemons.com/wp-content/uploads/2019/07/salad.jpg',
+      })
+    );
   }
 
   getRecipes() {
