@@ -1,14 +1,14 @@
 import { MealPlanner } from './meal-planner';
-import { createRecipe } from './recipe';
+import { createRecipe, Recipe } from './recipe';
 
 describe(MealPlanner.name, () => {
   it('should add recipes', () => {
-    const { mealPlanner, createBurger, createPizza } = setUp();
+    const { mealPlanner } = setUp();
 
     const emptyRecipes = mealPlanner.getRecipes();
 
-    mealPlanner.addRecipe(createBurger());
-    mealPlanner.addRecipe(createPizza());
+    mealPlanner.addRecipe(RecipeMother.withName('Burger').value);
+    mealPlanner.addRecipe(RecipeMother.withName('Pizza').value);
 
     expect(emptyRecipes).toEqual([]);
     expect(mealPlanner.getRecipes()).toEqual([
@@ -24,13 +24,13 @@ describe(MealPlanner.name, () => {
   });
 
   it('should not allow duplicates', () => {
-    const { mealPlanner, createBurger } = setUp();
+    const { mealPlanner } = setUp();
 
-    mealPlanner.addRecipe(createBurger());
+    mealPlanner.addRecipe(RecipeMother.withName('Burger').value);
 
-    expect(() => mealPlanner.addRecipe(createBurger())).toThrow(
-      new Error(`Duplicate recipe error.`)
-    );
+    expect(() =>
+      mealPlanner.addRecipe(RecipeMother.withName('Burger').value)
+    ).toThrow(new Error(`Duplicate recipe error.`));
   });
 
   it('should remove recipes', () => {
@@ -38,22 +38,20 @@ describe(MealPlanner.name, () => {
 
     mealPlanner.removeRecipe('burger');
 
-    expect(mealPlanner.getRecipes()).toEqual([
-      {
-        id: 'pizza',
-        name: 'Pizza',
-      },
-    ]);
+    expect(mealPlanner.getRecipes()).not.toEqual(
+      expect.arrayContaining([expect.objectContaining({ id: 'burger' })])
+    );
   });
 
   xit('should move up recipes', () => {
     const { mealPlanner } = setUpWithRecipes();
 
-    mealPlanner.moveUp('pizza');
+    mealPlanner.moveUp('salad');
 
     expect(mealPlanner.getRecipes()).toEqual([
-      expect.objectContaining({ id: 'pizza' }),
       expect.objectContaining({ id: 'burger' }),
+      expect.objectContaining({ id: 'salad' }),
+      expect.objectContaining({ id: 'pizza' }),
     ]);
   });
 
@@ -69,21 +67,24 @@ describe(MealPlanner.name, () => {
   });
 
   function setUpWithRecipes() {
-    const { mealPlanner, createBurger, createPizza } = setUp();
-    mealPlanner.addRecipe(createBurger());
-    mealPlanner.addRecipe(createPizza());
+    const { mealPlanner } = setUp();
+    mealPlanner.addRecipe(RecipeMother.withName('Burger').value);
+    mealPlanner.addRecipe(RecipeMother.withName('Pizza').value);
+    mealPlanner.addRecipe(RecipeMother.withName('Salad').value);
     return { mealPlanner };
   }
 
   function setUp() {
     return {
-      createBurger() {
-        return createRecipe({ id: 'burger', name: 'Burger' });
-      },
-      createPizza() {
-        return createRecipe({ id: 'pizza', name: 'Pizza' });
-      },
       mealPlanner: new MealPlanner(),
     };
   }
 });
+
+class RecipeMother {
+  constructor(public value: Recipe) {}
+
+  static withName(name: string) {
+    return new RecipeMother(createRecipe({ id: name.toLowerCase(), name }));
+  }
+}
