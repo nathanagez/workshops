@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
