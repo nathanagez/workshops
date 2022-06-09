@@ -19,6 +19,7 @@
     "@angular/platform-browser": "14.0.0",
     "@angular/platform-browser-dynamic": "14.0.0",
     "@angular/router": "14.0.0",
+    "@jscutlery/operators": "^0.1.6",
     "@nrwl/angular": "14.1.9",
     "rxjs": "~7.4.0",
     "tslib": "^2.0.0",
@@ -58,4 +59,3 @@
     "@schematics/angular": "14.0.0"
   }
 }
-

@@ -7,6 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { suspensify } from '@jscutlery/operators';
 import {
   catchError,
   concat,
@@ -49,7 +50,7 @@ import { RecipePreviewComponent } from './recipe-preview.component';
 
     <hr />
 
-    <div *ngIf="recipes == null">Loading...</div>
+    <div *ngIf="pending">Loading...</div>
 
     <div *ngIf="recipes?.length === 0">No results.</div>
 
@@ -78,6 +79,7 @@ export class RecipeSearchComponent implements OnInit {
     maxSteps: this.maxStepsCtrl,
   });
 
+  pending = false;
   recipes?: Recipe[] | null;
 
   constructor(private _http: HttpClient) {}
@@ -94,7 +96,6 @@ export class RecipeSearchComponent implements OnInit {
           {} as { keywords?: string; minSteps?: number; maxSteps?: number }
         ),
         switchMap(({ keywords, maxSteps, minSteps }) => {
-          this.recipes = null;
           return this._http
             .get<RecipeResponse>(
               'https://ottolenghi-recipes.getsandbox.com/recipes',
@@ -107,18 +108,18 @@ export class RecipeSearchComponent implements OnInit {
               }
             )
             .pipe(
+              map((response) => response.items),
               retry({
                 delay: () => connectionResumed$,
               }),
-              catchError((err) => {
-                console.error(err);
-                return EMPTY;
-              })
+              suspensify()
             );
-        }),
-        map((response) => response.items)
+        })
       )
-      .subscribe((recipes) => (this.recipes = recipes));
+      .subscribe(({ value, pending }) => {
+        this.pending = pending;
+        this.recipes = value;
+      });
   }
 
   /**
