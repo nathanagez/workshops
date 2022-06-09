@@ -7,7 +7,23 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {
+  catchError,
+  concat,
+  debounceTime,
+  delay,
+  EMPTY,
+  filter,
+  fromEvent,
+  map,
+  Observable,
+  retry,
+  retryWhen,
+  startWith,
+  switchMap,
+  take,
+  timer,
+} from 'rxjs';
 import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 
@@ -70,39 +86,39 @@ export class RecipeSearchComponent implements OnInit {
     this._updateControls();
     this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
 
-    let subscription: Subscription;
-
-    this.searchForm.valueChanges.subscribe(
-      ({ keywords, minSteps, maxSteps }) => {
-        if (!this.searchForm.valid) {
-          return;
-        }
-
-        this.recipes = null;
-
-        if (subscription) {
-          subscription.unsubscribe();
-        }
-
-        subscription = this._http
-          .get<RecipeResponse>(
-            'https://ottolenghi-recipes.getsandbox.com/recipes',
-            {
-              params: {
-                ...(keywords != null ? { keywords } : {}),
-                ...(minSteps != null ? { min_steps: minSteps } : {}),
-                ...(maxSteps != null ? { max_steps: maxSteps } : {}),
-              },
-            }
-          )
-          .subscribe((data) => {
-            this.recipes = data.items;
-          });
-      }
-    );
-    // @todo on form change, fetch recipes
-    // https://ottolenghi-recipes.getsandbox.com/recipes
-    // keywords, min_steps, max_steps
+    this.searchForm.valueChanges
+      .pipe(
+        debounceTime(100),
+        filter(() => this.searchForm.valid),
+        startWith(
+          {} as { keywords?: string; minSteps?: number; maxSteps?: number }
+        ),
+        switchMap(({ keywords, maxSteps, minSteps }) => {
+          this.recipes = null;
+          return this._http
+            .get<RecipeResponse>(
+              'https://ottolenghi-recipes.getsandbox.com/recipes',
+              {
+                params: {
+                  ...(keywords != null ? { keywords } : {}),
+                  ...(minSteps != null ? { min_steps: minSteps } : {}),
+                  ...(maxSteps != null ? { max_steps: maxSteps } : {}),
+                },
+              }
+            )
+            .pipe(
+              retry({
+                delay: () => connectionResumed$,
+              }),
+              catchError((err) => {
+                console.error(err);
+                return EMPTY;
+              })
+            );
+        }),
+        map((response) => response.items)
+      )
+      .subscribe((recipes) => (this.recipes = recipes));
   }
 
   /**
@@ -127,3 +143,5 @@ interface RecipeResponse {
     steps: string[];
   }>;
 }
+
+const connectionResumed$ = fromEvent(window, 'online');
