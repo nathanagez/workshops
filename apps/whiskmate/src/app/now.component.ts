@@ -11,7 +11,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-now',
   imports: [CommonModule],
-  template: `{{ now }}`,
+  template: `{{ now | date: 'medium' }}`,
 })
 export class NowComponent {
   now = new Date();
