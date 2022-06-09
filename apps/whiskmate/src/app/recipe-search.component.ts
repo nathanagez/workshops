@@ -1,23 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import {
-  ChangeDetectionStrategy,
-  Component, OnInit
-} from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Recipe } from './recipe';
-
+import { RecipePreviewComponent } from './recipe-preview.component';
 
 @Component({
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-search',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RecipePreviewComponent],
   template: `
     <form [formGroup]="searchForm">
       <input formControlName="keywords" placeholder="Keywords" type="text" />
@@ -33,6 +30,17 @@ import { Recipe } from './recipe';
     >
       Keywords is required
     </div>
+
+    <hr />
+
+    <div *ngIf="recipes == null">Loading...</div>
+
+    <div *ngIf="recipes?.length === 0">No results.</div>
+
+    <wm-recipe-preview
+      *ngFor="let recipe of recipes"
+      [recipe]="recipe"
+    ></wm-recipe-preview>
   `,
   styles: [
     `
@@ -54,7 +62,7 @@ export class RecipeSearchComponent implements OnInit {
     maxSteps: this.maxStepsCtrl,
   });
 
-  recipes?: Recipe[];
+  recipes?: Recipe[] | null;
 
   constructor(private _http: HttpClient) {}
 
@@ -62,11 +70,36 @@ export class RecipeSearchComponent implements OnInit {
     this._updateControls();
     this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
 
-    this._http
-      .get<RecipeResponse>('https://ottolenghi-recipes.getsandbox.com/recipes')
-      .subscribe((data) => {
-        this.recipes = data.items;
-      });
+    let subscription: Subscription;
+
+    this.searchForm.valueChanges.subscribe(
+      ({ keywords, minSteps, maxSteps }) => {
+        if (!this.searchForm.valid) {
+          return;
+        }
+
+        this.recipes = null;
+
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+
+        subscription = this._http
+          .get<RecipeResponse>(
+            'https://ottolenghi-recipes.getsandbox.com/recipes',
+            {
+              params: {
+                ...(keywords != null ? { keywords } : {}),
+                ...(minSteps != null ? { min_steps: minSteps } : {}),
+                ...(maxSteps != null ? { max_steps: maxSteps } : {}),
+              },
+            }
+          )
+          .subscribe((data) => {
+            this.recipes = data.items;
+          });
+      }
+    );
     // @todo on form change, fetch recipes
     // https://ottolenghi-recipes.getsandbox.com/recipes
     // keywords, min_steps, max_steps
@@ -77,11 +110,11 @@ export class RecipeSearchComponent implements OnInit {
    */
   private _updateControls() {
     if (this.keywordsCtrl.valid) {
-      this.minStepsCtrl.enable();
-      this.maxStepsCtrl.enable();
+      this.minStepsCtrl.enable({ emitEvent: false });
+      this.maxStepsCtrl.enable({ emitEvent: false });
     } else {
-      this.minStepsCtrl.disable();
-      this.maxStepsCtrl.disable();
+      this.minStepsCtrl.disable({ emitEvent: false });
+      this.maxStepsCtrl.disable({ emitEvent: false });
     }
   }
 }
