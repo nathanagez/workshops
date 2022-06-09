@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -36,20 +36,33 @@ import {
     `,
   ],
 })
-export class RecipeSearchComponent {
+export class RecipeSearchComponent implements OnInit {
+  keywordsCtrl = new FormControl<string | null>(null, {
+    validators: [Validators.required, Validators.minLength(3)],
+  });
+  minStepsCtrl = new FormControl<number | null>(null);
+  maxStepsCtrl = new FormControl<number | null>(null);
   searchForm = new FormGroup({
-    keywords: new FormControl<string | null>(null, {
-      validators: [Validators.required, Validators.minLength(3)],
-    }),
-    minSteps: new FormControl<number | null>(null),
-    maxSteps: new FormControl<number | null>(null),
+    keywords: this.keywordsCtrl,
+    minSteps: this.minStepsCtrl,
+    maxSteps: this.maxStepsCtrl,
   });
 
-  constructor() {
-    this.searchForm.valueChanges.subscribe((value) => {
-      console.log(this.searchForm.valid);
-      console.log(this.searchForm.get('keywords')?.errors);
-      console.log(value);
-    });
+  ngOnInit() {
+    this._updateControls();
+    this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
+  }
+
+  /**
+   * Enable/disable min/max steps based on keywords.
+   */
+  private _updateControls() {
+    if (this.keywordsCtrl.valid) {
+      this.minStepsCtrl.enable();
+      this.maxStepsCtrl.enable();
+    } else {
+      this.minStepsCtrl.disable();
+      this.maxStepsCtrl.disable();
+    }
   }
 }
