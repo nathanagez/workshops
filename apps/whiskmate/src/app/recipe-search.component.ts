@@ -1,11 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import {
+  ChangeDetectionStrategy,
+  Component, OnInit
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
+import { Recipe } from './recipe';
+
 
 @Component({
   standalone: true,
@@ -48,9 +54,22 @@ export class RecipeSearchComponent implements OnInit {
     maxSteps: this.maxStepsCtrl,
   });
 
+  recipes?: Recipe[];
+
+  constructor(private _http: HttpClient) {}
+
   ngOnInit() {
     this._updateControls();
     this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
+
+    this._http
+      .get<RecipeResponse>('https://ottolenghi-recipes.getsandbox.com/recipes')
+      .subscribe((data) => {
+        this.recipes = data.items;
+      });
+    // @todo on form change, fetch recipes
+    // https://ottolenghi-recipes.getsandbox.com/recipes
+    // keywords, min_steps, max_steps
   }
 
   /**
@@ -65,4 +84,13 @@ export class RecipeSearchComponent implements OnInit {
       this.maxStepsCtrl.disable();
     }
   }
+}
+
+interface RecipeResponse {
+  items: Array<{
+    id: string;
+    name: string;
+    ingredients: string[];
+    steps: string[];
+  }>;
 }
