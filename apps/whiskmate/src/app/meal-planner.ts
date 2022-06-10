@@ -30,6 +30,12 @@ export class MealPlanner {
     );
   }
 
+  getRecipe(recipeId: string): Observable<Recipe | undefined> {
+    return this.recipes$.pipe(
+      map((recipes) => recipes.find((recipe) => recipe.id === recipeId))
+    );
+  }
+
   /**
    * @deprecated use {@link _recipes$} instead.
    */

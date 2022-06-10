@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { MealPlanner } from './meal-planner';
-import { createRecipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-meal-planner',
-  imports: [CommonModule, RecipePreviewComponent],
+  imports: [CommonModule, RecipePreviewComponent, RouterModule],
   template: `
     <wm-recipe-preview
       *ngFor="
@@ -18,6 +18,7 @@ import { RecipePreviewComponent } from './recipe-preview.component';
       "
       [recipe]="recipe"
     >
+      <a [routerLink]="['/meals', recipe.id]">let's cook!</a>
       <button type="button" [disabled]="first" (click)="moveUp(recipe.id)">
         ⬆️
       </button>

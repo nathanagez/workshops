@@ -1,3 +1,4 @@
+import { MealDetailComponent } from './app/meal-detail.component';
 import { HttpClientModule } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
@@ -19,6 +20,10 @@ const appRoutes: Route[] = [
   {
     path: 'meals',
     component: MealPlannerComponent,
+  },
+  {
+    path: 'meals/:recipeId',
+    component: MealDetailComponent,
   },
   {
     path: '**',
