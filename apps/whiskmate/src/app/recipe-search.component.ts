@@ -13,7 +13,10 @@ import { RecipeRepository } from './recipe-repository.service';
   selector: 'wm-recipe-search',
   imports: [CommonModule, RecipeFilterComponent, RecipePreviewComponent],
   template: `
-    <wm-recipe-filter (filterChange)="filter$.next($event)"></wm-recipe-filter>
+    <wm-recipe-filter
+      [filter]="filter$ | async"
+      (filterChange)="filter$.next($event)"
+    ></wm-recipe-filter>
 
     <hr />
 
@@ -27,6 +30,11 @@ import { RecipeRepository } from './recipe-repository.service';
         [recipe]="recipe"
       ></wm-recipe-preview>
     </ng-container>
+
+    <wm-recipe-filter
+      [filter]="filter$ | async"
+      (filterChange)="filter$.next($event)"
+    ></wm-recipe-filter>
   `,
   styles: [
     `

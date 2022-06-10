@@ -2,17 +2,17 @@ import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  Output,
+  Input, OnInit,
+  Output
 } from '@angular/core';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { RecipeFilter } from './recipe-filter';
 import { filter, Observable, Subscription } from 'rxjs';
+import { RecipeFilter } from './recipe-filter';
 
 @Component({
   standalone: true,
@@ -37,6 +37,11 @@ import { filter, Observable, Subscription } from 'rxjs';
   `,
 })
 export class RecipeFilterComponent implements OnInit {
+  @Input() set filter(filter: RecipeFilter | null) {
+    filter != null
+      ? this.searchForm.patchValue(filter, { emitEvent: false })
+      : this.searchForm.reset(undefined, { emitEvent: false });
+  }
   @Output() filterChange: Observable<RecipeFilter>;
 
   keywordsCtrl = new FormControl<string | null>(null, {
