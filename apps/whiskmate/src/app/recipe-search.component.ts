@@ -1,7 +1,9 @@
+import { MealPlanner } from './meal-planner';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { suspensify } from '@jscutlery/operators';
 import { BehaviorSubject, debounceTime, switchMap } from 'rxjs';
+import { Recipe } from './recipe';
 import { RecipeFilter } from './recipe-filter';
 import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipePreviewComponent } from './recipe-preview.component';
@@ -23,10 +25,9 @@ import { RecipeRepository } from './recipe-repository.service';
 
       <div *ngIf="recipes.value?.length === 0">No results.</div>
 
-      <wm-recipe-preview
-        *ngFor="let recipe of recipes.value"
-        [recipe]="recipe"
-      ></wm-recipe-preview>
+      <wm-recipe-preview *ngFor="let recipe of recipes.value" [recipe]="recipe">
+        <button (click)="addToMealPlanner(recipe)">🛒</button>
+      </wm-recipe-preview>
     </ng-container>
   `,
   styles: [
@@ -46,5 +47,12 @@ export class RecipeSearchComponent {
     )
   );
 
-  constructor(private _recipeRepository: RecipeRepository) {}
+  constructor(
+    private _mealPlanner: MealPlanner,
+    private _recipeRepository: RecipeRepository
+  ) {}
+
+  addToMealPlanner(recipe: Recipe) {
+    this._mealPlanner.addRecipe(recipe);
+  }
 }

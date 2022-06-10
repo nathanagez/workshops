@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MealPlanner } from './meal-planner';
 import { createRecipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-meal-planner',
   imports: [CommonModule, RecipePreviewComponent],
   template: `
@@ -24,10 +25,8 @@ import { RecipePreviewComponent } from './recipe-preview.component';
   `,
 })
 export class MealPlannerComponent {
-  mealPlanner = new MealPlanner();
-
-  constructor() {
-    this.mealPlanner.addRecipe(
+  constructor(private _mealPlanner: MealPlanner) {
+    this._mealPlanner.addRecipe(
       createRecipe({
         id: 'burger',
         name: 'Burger',
@@ -35,7 +34,7 @@ export class MealPlannerComponent {
           'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/102cf51c-9220-4278-8b63-2b9611ad275e/Derivates/3831dbe2-352e-4409-a2e2-fc87d11cab0a.jpg',
       })
     );
-    this.mealPlanner.addRecipe(
+    this._mealPlanner.addRecipe(
       createRecipe({
         id: 'pizza',
         name: 'Pizza',
@@ -43,7 +42,7 @@ export class MealPlannerComponent {
           'https://assets.afcdn.com/recipe/20200206/107152_w1024h1024c1cx176cy267cxb353cyb535.jpg',
       })
     );
-    this.mealPlanner.addRecipe(
+    this._mealPlanner.addRecipe(
       createRecipe({
         id: 'salad',
         name: 'Salad',
@@ -54,18 +53,18 @@ export class MealPlannerComponent {
   }
 
   getRecipes() {
-    return this.mealPlanner.getRecipes();
+    return this._mealPlanner.getRecipes();
   }
 
   moveUp(recipeId: string) {
-    this.mealPlanner.moveUp(recipeId);
+    this._mealPlanner.moveUp(recipeId);
   }
 
   moveDown(recipeId: string) {
-    this.mealPlanner.moveDown(recipeId);
+    this._mealPlanner.moveDown(recipeId);
   }
 
   remove(recipeId: string) {
-    this.mealPlanner.removeRecipe(recipeId);
+    this._mealPlanner.removeRecipe(recipeId);
   }
 }
