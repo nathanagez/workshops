@@ -26,7 +26,12 @@ import { RecipeRepository } from './recipe-repository.service';
       <div *ngIf="recipes.value?.length === 0">No results.</div>
 
       <wm-recipe-preview *ngFor="let recipe of recipes.value" [recipe]="recipe">
-        <button (click)="addToMealPlanner(recipe)">🛒</button>
+        <button
+          *ngIf="canAddRecipe(recipe) | async"
+          (click)="addToMealPlanner(recipe)"
+        >
+          🛒
+        </button>
       </wm-recipe-preview>
     </ng-container>
   `,
@@ -54,5 +59,9 @@ export class RecipeSearchComponent {
 
   addToMealPlanner(recipe: Recipe) {
     this._mealPlanner.addRecipe(recipe);
+  }
+
+  canAddRecipe(recipe: Recipe) {
+    return this._mealPlanner.canAddRecipe(recipe);
   }
 }

@@ -1,3 +1,4 @@
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Recipe } from './recipe';
 
@@ -5,26 +6,40 @@ import { Recipe } from './recipe';
   providedIn: 'root',
 })
 export class MealPlanner {
-  private _recipes: Recipe[] = [];
+  recipes$: Observable<Recipe[]>;
+  private _recipes$ = new BehaviorSubject<Recipe[]>([]);
+
+  constructor() {
+    this.recipes$ = this._recipes$.asObservable();
+  }
 
   addRecipe(recipe: Recipe) {
-    if (this._contains(recipe)) {
+    if (this._contains(this._recipes$.value, recipe)) {
       throw new Error('Duplicate recipe error.');
     }
 
-    this._recipes = [...this._recipes, recipe];
+    this._updateRecipes([...this._recipes$.value, recipe]);
   }
 
+  canAddRecipe(recipe: Recipe) {
+    return this._recipes$.pipe(
+      map((recipes) => !this._contains(recipes, recipe))
+    );
+  }
+
+  /**
+   * @deprecated use {@link _recipes$} instead.
+   */
   getRecipes(): Recipe[] {
-    return this._recipes;
+    return this._recipes$.value;
   }
 
   moveDown(recipeId: string) {
-    const recipeIndex = this._recipes.findIndex(
+    const recipeIndex = this._recipes$.value.findIndex(
       (recipe) => recipe.id === recipeId
     );
 
-    if (recipeIndex === this._recipes.length - 1) {
+    if (recipeIndex === this._recipes$.value.length - 1) {
       return;
     }
 
@@ -32,7 +47,7 @@ export class MealPlanner {
   }
 
   moveUp(recipeId: string) {
-    const recipeIndex = this._recipes.findIndex(
+    const recipeIndex = this._recipes$.value.findIndex(
       (recipe) => recipe.id === recipeId
     );
 
@@ -44,26 +59,29 @@ export class MealPlanner {
   }
 
   removeRecipe(recipeId: string) {
-    this._recipes = this._recipes.filter((recipe) => recipe.id !== recipeId);
+    this._updateRecipes(
+      this._recipes$.value.filter((recipe) => recipe.id !== recipeId)
+    );
   }
 
-  private _contains(recipe: Recipe) {
-    return this._recipes.findIndex((_recipe) => _recipe.id === recipe.id) >= 0;
+  private _contains(recipes: Recipe[], recipe: Recipe) {
+    return recipes.find((_recipe) => _recipe.id === recipe.id) != null;
   }
 
   private _updateRecipes(recipes: Recipe[]) {
-    this._recipes = recipes;
+    this._recipes$.next(recipes);
   }
 
   private _swap(srcIndex: number, dstIndex: number) {
+    const recipes = this._recipes$.value;
     this._updateRecipes(
-      this._recipes.map((recipe, index) => {
+      recipes.map((recipe, index) => {
         if (index === srcIndex) {
-          return this._recipes[dstIndex];
+          return recipes[dstIndex];
         }
 
         if (index === dstIndex) {
-          return this._recipes[srcIndex];
+          return recipes[srcIndex];
         }
 
         return recipe;

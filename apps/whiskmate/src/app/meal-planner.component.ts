@@ -11,7 +11,11 @@ import { RecipePreviewComponent } from './recipe-preview.component';
   imports: [CommonModule, RecipePreviewComponent],
   template: `
     <wm-recipe-preview
-      *ngFor="let recipe of getRecipes(); let first = first; let last = last"
+      *ngFor="
+        let recipe of recipes$ | async;
+        let first = first;
+        let last = last
+      "
       [recipe]="recipe"
     >
       <button type="button" [disabled]="first" (click)="moveUp(recipe.id)">
@@ -25,6 +29,8 @@ import { RecipePreviewComponent } from './recipe-preview.component';
   `,
 })
 export class MealPlannerComponent {
+  recipes$ = this._mealPlanner.recipes$;
+
   constructor(private _mealPlanner: MealPlanner) {
     this._mealPlanner.addRecipe(
       createRecipe({
@@ -50,10 +56,6 @@ export class MealPlannerComponent {
           'https://cdn.loveandlemons.com/wp-content/uploads/2019/07/salad.jpg',
       })
     );
-  }
-
-  getRecipes() {
-    return this._mealPlanner.getRecipes();
   }
 
   moveUp(recipeId: string) {
