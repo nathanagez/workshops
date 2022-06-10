@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -8,28 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { suspensify } from '@jscutlery/operators';
-import {
-  catchError,
-  concat,
-  debounceTime,
-  delay,
-  EMPTY,
-  filter,
-  fromEvent,
-  map,
-  Observable,
-  retry,
-  retryWhen,
-  startWith,
-  switchMap,
-  take,
-  timer,
-} from 'rxjs';
-import { Recipe } from './recipe';
+import { debounceTime, filter, share, startWith, switchMap } from 'rxjs';
 import { RecipePreviewComponent } from './recipe-preview.component';
+import { RecipeFilter, RecipeRepository } from './recipe-repository.service';
 
 @Component({
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-search',
   imports: [CommonModule, ReactiveFormsModule, RecipePreviewComponent],
   template: `
@@ -50,14 +34,16 @@ import { RecipePreviewComponent } from './recipe-preview.component';
 
     <hr />
 
-    <div *ngIf="pending">Loading...</div>
+    <div *ngIf="recipes$ | async as recipes">
+      <div *ngIf="recipes.pending">Loading...</div>
 
-    <div *ngIf="recipes?.length === 0">No results.</div>
+      <div *ngIf="recipes.value?.length === 0">No results.</div>
 
-    <wm-recipe-preview
-      *ngFor="let recipe of recipes"
-      [recipe]="recipe"
-    ></wm-recipe-preview>
+      <wm-recipe-preview
+        *ngFor="let recipe of recipes.value"
+        [recipe]="recipe"
+      ></wm-recipe-preview>
+    </div>
   `,
   styles: [
     `
@@ -79,47 +65,23 @@ export class RecipeSearchComponent implements OnInit {
     maxSteps: this.maxStepsCtrl,
   });
 
-  pending = false;
-  recipes?: Recipe[] | null;
+  recipes$ = this.searchForm.valueChanges.pipe(
+    debounceTime(100),
+    filter(() => this.searchForm.valid),
+    startWith({} as RecipeFilter),
+    switchMap((filter) =>
+      this._recipeRepository.search(filter).pipe(suspensify())
+    ),
+    share({
+      resetOnRefCountZero: true,
+    })
+  );
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _recipeRepository: RecipeRepository) {}
 
   ngOnInit() {
     this._updateControls();
     this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
-
-    this.searchForm.valueChanges
-      .pipe(
-        debounceTime(100),
-        filter(() => this.searchForm.valid),
-        startWith(
-          {} as { keywords?: string; minSteps?: number; maxSteps?: number }
-        ),
-        switchMap(({ keywords, maxSteps, minSteps }) => {
-          return this._http
-            .get<RecipeResponse>(
-              'https://ottolenghi-recipes.getsandbox.com/recipes',
-              {
-                params: {
-                  ...(keywords != null ? { keywords } : {}),
-                  ...(minSteps != null ? { min_steps: minSteps } : {}),
-                  ...(maxSteps != null ? { max_steps: maxSteps } : {}),
-                },
-              }
-            )
-            .pipe(
-              map((response) => response.items),
-              retry({
-                delay: () => connectionResumed$,
-              }),
-              suspensify()
-            );
-        })
-      )
-      .subscribe(({ value, pending }) => {
-        this.pending = pending;
-        this.recipes = value;
-      });
   }
 
   /**
@@ -135,14 +97,3 @@ export class RecipeSearchComponent implements OnInit {
     }
   }
 }
-
-interface RecipeResponse {
-  items: Array<{
-    id: string;
-    name: string;
-    ingredients: string[];
-    steps: string[];
-  }>;
-}
-
-const connectionResumed$ = fromEvent(window, 'online');
