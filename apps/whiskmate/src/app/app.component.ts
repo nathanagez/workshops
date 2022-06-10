@@ -1,20 +1,39 @@
-import { RecipeSearchComponent } from './recipe-search.component';
+import { CommonModule } from '@angular/common';
+import { MealPlanner } from './meal-planner';
 import { Component } from '@angular/core';
-import { MealPlannerComponent } from './meal-planner.component';
-import { NowComponent } from './now.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'wm-app',
-  imports: [MealPlannerComponent, NowComponent, RecipeSearchComponent],
+  imports: [CommonModule, RouterModule],
   template: `
-    <wm-now></wm-now>
     <h1>👨🏻‍🍳 Welcome to {{ title }}</h1>
-    <wm-recipe-search></wm-recipe-search>
-    <hr />
-    <wm-meal-planner></wm-meal-planner>
+    <router-outlet></router-outlet>
+    <footer>
+      <hr />
+      <ul>
+        <li><a routerLink="">Recipe Search</a></li>
+        <li>
+          <a routerLink="/meals"
+            >Meals ({{ mealPlanner.recipeCount$ | async }})</a
+          >
+        </li>
+      </ul>
+    </footer>
   `,
+  styles: [
+    `
+      footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    `,
+  ],
 })
 export class AppComponent {
   title = 'whiskmate';
+
+  constructor(protected mealPlanner: MealPlanner) {}
 }

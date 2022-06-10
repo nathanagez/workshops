@@ -7,10 +7,13 @@ import { Recipe } from './recipe';
 })
 export class MealPlanner {
   recipes$: Observable<Recipe[]>;
+  recipeCount$: Observable<number>;
+
   private _recipes$ = new BehaviorSubject<Recipe[]>([]);
 
   constructor() {
     this.recipes$ = this._recipes$.asObservable();
+    this.recipeCount$ = this.recipes$.pipe(map((recipes) => recipes.length));
   }
 
   addRecipe(recipe: Recipe) {
