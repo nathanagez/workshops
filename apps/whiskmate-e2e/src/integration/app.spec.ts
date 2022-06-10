@@ -1,13 +1,10 @@
-import { getGreeting } from '../support/app.po';
-
 describe('whiskmate', () => {
   beforeEach(() => cy.visit('/'));
 
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
-
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome whiskmate');
+  it('should add recipe to meals', () => {
+    cy.get('input').eq(0).type('eggs');
+    cy.get('button').click();
+    cy.contains('Meals').click();
+    cy.get('body').should('contain', 'Braised eggs');
   });
 });
