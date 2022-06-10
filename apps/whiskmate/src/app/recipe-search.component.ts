@@ -18,8 +18,6 @@ import { RecipeRepository } from './recipe-repository.service';
       (filterChange)="filter$.next($event)"
     ></wm-recipe-filter>
 
-    <hr />
-
     <ng-container *ngIf="recipes$ | async as recipes">
       <div *ngIf="recipes.pending">Loading...</div>
 
@@ -30,11 +28,6 @@ import { RecipeRepository } from './recipe-repository.service';
         [recipe]="recipe"
       ></wm-recipe-preview>
     </ng-container>
-
-    <wm-recipe-filter
-      [filter]="filter$ | async"
-      (filterChange)="filter$.next($event)"
-    ></wm-recipe-filter>
   `,
   styles: [
     `

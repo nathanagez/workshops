@@ -11,6 +11,8 @@ import { NowComponent } from './now.component';
     <wm-now></wm-now>
     <h1>👨🏻‍🍳 Welcome to {{ title }}</h1>
     <wm-recipe-search></wm-recipe-search>
+    <hr />
+    <wm-meal-planner></wm-meal-planner>
   `,
 })
 export class AppComponent {
