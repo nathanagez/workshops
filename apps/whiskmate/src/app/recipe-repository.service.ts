@@ -2,12 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { fromEvent, map, Observable, retry } from 'rxjs';
 import { Recipe } from './recipe';
-
-export interface RecipeFilter {
-  keywords?: string | null;
-  maxSteps?: number | null;
-  minSteps?: number | null;
-}
+import { RecipeFilter } from './recipe-filter';
 
 @Injectable({
   providedIn: 'root',

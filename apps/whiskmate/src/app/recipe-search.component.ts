@@ -1,40 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { suspensify } from '@jscutlery/operators';
-import { debounceTime, filter, share, startWith, switchMap } from 'rxjs';
+import { BehaviorSubject, debounceTime, switchMap } from 'rxjs';
+import { RecipeFilter } from './recipe-filter';
+import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipePreviewComponent } from './recipe-preview.component';
-import { RecipeFilter, RecipeRepository } from './recipe-repository.service';
+import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'wm-recipe-search',
-  imports: [CommonModule, ReactiveFormsModule, RecipePreviewComponent],
+  imports: [CommonModule, RecipeFilterComponent, RecipePreviewComponent],
   template: `
-    <form [formGroup]="searchForm">
-      <input formControlName="keywords" placeholder="Keywords" type="text" />
-      <input formControlName="minSteps" placeholder="Min steps" type="number" />
-      <input formControlName="maxSteps" placeholder="Max steps" type="number" />
-    </form>
-
-    <div
-      *ngIf="
-        searchForm.get('keywords')?.touched &&
-        searchForm.get('keywords')?.hasError('required')
-      "
-    >
-      Keywords is required
-    </div>
+    <wm-recipe-filter (filterChange)="filter$.next($event)"></wm-recipe-filter>
 
     <hr />
 
-    <div *ngIf="recipes$ | async as recipes">
+    <ng-container *ngIf="recipes$ | async as recipes">
       <div *ngIf="recipes.pending">Loading...</div>
 
       <div *ngIf="recipes.value?.length === 0">No results.</div>
@@ -43,7 +26,7 @@ import { RecipeFilter, RecipeRepository } from './recipe-repository.service';
         *ngFor="let recipe of recipes.value"
         [recipe]="recipe"
       ></wm-recipe-preview>
-    </div>
+    </ng-container>
   `,
   styles: [
     `
@@ -53,47 +36,14 @@ import { RecipeFilter, RecipeRepository } from './recipe-repository.service';
     `,
   ],
 })
-export class RecipeSearchComponent implements OnInit {
-  keywordsCtrl = new FormControl<string | null>(null, {
-    validators: [Validators.required, Validators.minLength(3)],
-  });
-  minStepsCtrl = new FormControl<number | null>(null);
-  maxStepsCtrl = new FormControl<number | null>(null);
-  searchForm = new FormGroup({
-    keywords: this.keywordsCtrl,
-    minSteps: this.minStepsCtrl,
-    maxSteps: this.maxStepsCtrl,
-  });
-
-  recipes$ = this.searchForm.valueChanges.pipe(
-    debounceTime(100),
-    filter(() => this.searchForm.valid),
-    startWith({} as RecipeFilter),
+export class RecipeSearchComponent {
+  filter$ = new BehaviorSubject<RecipeFilter>({});
+  recipes$ = this.filter$.pipe(
+    debounceTime(50),
     switchMap((filter) =>
       this._recipeRepository.search(filter).pipe(suspensify())
-    ),
-    share({
-      resetOnRefCountZero: true,
-    })
+    )
   );
 
   constructor(private _recipeRepository: RecipeRepository) {}
-
-  ngOnInit() {
-    this._updateControls();
-    this.keywordsCtrl.valueChanges.subscribe(() => this._updateControls());
-  }
-
-  /**
-   * Enable/disable min/max steps based on keywords.
-   */
-  private _updateControls() {
-    if (this.keywordsCtrl.valid) {
-      this.minStepsCtrl.enable({ emitEvent: false });
-      this.maxStepsCtrl.enable({ emitEvent: false });
-    } else {
-      this.minStepsCtrl.disable({ emitEvent: false });
-      this.maxStepsCtrl.disable({ emitEvent: false });
-    }
-  }
 }
