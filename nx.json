@@ -47,7 +47,11 @@
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
-      "style": "css"
+      "style": "css",
+      "flat": true,
+      "inlineStyle": true,
+      "inlineTemplate": true,
+      "standalone": true
     }
   },
   "defaultProject": "meal-planner"
