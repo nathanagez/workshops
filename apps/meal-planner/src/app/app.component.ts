@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'workshop-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: 'mp-app',
+  template: `<h1>{{ title }}</h1>`
 })
 export class AppComponent {
   title = 'meal-planner';
