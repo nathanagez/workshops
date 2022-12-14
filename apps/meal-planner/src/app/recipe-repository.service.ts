@@ -10,6 +10,7 @@ export class RecipeRepository {
   private _httpClient = inject(HttpClient);
 
   getRecipes(): Observable<Recipe[]> {
+    // @todo send keywords to the server in "q" query parameter
     return this._httpClient
       .get<RecipesResponseDto>('https://recipes-api.marmicode.io/recipes')
       .pipe(
