@@ -1,34 +1,28 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { NgForOf, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { AsyncPipe, NgForOf } from '@angular/common';
 import { RecipeRepository } from './recipe-repository.service';
 import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
+import { Observable } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'mp-recipe-search',
   standalone: true,
-  imports: [NgForOf, RecipePreviewComponent, NgIf],
+  imports: [NgForOf, RecipePreviewComponent, AsyncPipe],
   template: `
     <mp-recipe-preview
-      *ngFor="let recipe of recipes"
+      *ngFor="let recipe of recipes$ | async"
       [recipe]="recipe"
     ></mp-recipe-preview>
   `,
 })
-export class RecipeSearchComponent implements OnInit {
-  recipes?: Recipe[];
+export class RecipeSearchComponent {
+  recipes$: Observable<Recipe[]>;
 
   private _recipeRepository = inject(RecipeRepository);
 
-  ngOnInit() {
-    this._recipeRepository.getRecipes().subscribe((recipes) => {
-      this.recipes = recipes;
-    });
+  constructor() {
+    this.recipes$ = this._recipeRepository.getRecipes();
   }
 }
