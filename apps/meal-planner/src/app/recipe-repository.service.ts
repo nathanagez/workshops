@@ -9,10 +9,13 @@ import { Recipe } from './recipe';
 export class RecipeRepository {
   private _httpClient = inject(HttpClient);
 
-  getRecipes(): Observable<Recipe[]> {
-    // @todo send keywords to the server in "q" query parameter
+  getRecipes({ keywords }: { keywords?: string | null } = {}): Observable<
+    Recipe[]
+  > {
     return this._httpClient
-      .get<RecipesResponseDto>('https://recipes-api.marmicode.io/recipes')
+      .get<RecipesResponseDto>('https://recipes-api.marmicode.io/recipes', {
+        params: keywords ? { q: keywords } : {},
+      })
       .pipe(
         map((response) =>
           response.items.map((recipe) => {

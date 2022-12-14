@@ -3,14 +3,19 @@ import { AsyncPipe, NgForOf } from '@angular/common';
 import { RecipeRepository } from './recipe-repository.service';
 import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
-import { Observable } from 'rxjs';
 import {
-  FormArray,
-  FormControl,
-  FormGroup,
-  FormGroupDirective,
-  ReactiveFormsModule,
-} from '@angular/forms';
+  concatMap,
+  exhaustMap,
+  interval,
+  map,
+  mapTo,
+  mergeMap,
+  Observable,
+  retry,
+  switchMap,
+  timer,
+} from 'rxjs';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,10 +24,7 @@ import {
   imports: [NgForOf, RecipePreviewComponent, AsyncPipe, ReactiveFormsModule],
   template: `
     <form [formGroup]="form">
-      <input type="text" formControlName="firstName" />
-      <input type="text" formControlName="firstName" />
-      <input type="text" formControlName="lastName" />
-      <button type="submit">Search</button>
+      <input type="text" formControlName="keywords" />
     </form>
 
     <mp-recipe-preview
@@ -32,20 +34,17 @@ import {
   `,
 })
 export class RecipeSearchComponent {
-  recipes$: Observable<Recipe[]>;
   form = new FormGroup({
-    firstName: new FormControl<string | null>(null),
-    lastName: new FormControl<string | null>(null),
+    keywords: new FormControl<string | null>(null),
   });
 
+  recipes$ = this.form.controls.keywords.valueChanges.pipe(
+    switchMap((keywords) =>
+      timer(0, 1000).pipe(
+        exhaustMap(() => this._recipeRepository.getRecipes({ keywords }))
+      )
+    )
+  );
+
   private _recipeRepository = inject(RecipeRepository);
-
-  // 1. @todo trigger search on submit
-  // 2. @todo trigger search on keywords change
-
-  constructor() {
-    // this.form.value.keywords
-    // this.form.valueChanges => Observable<{ keywords: string | null }>
-    this.recipes$ = this._recipeRepository.getRecipes();
-  }
 }
