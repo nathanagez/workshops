@@ -19,7 +19,9 @@ import {
   imports: [NgForOf, RecipePreviewComponent, AsyncPipe, ReactiveFormsModule],
   template: `
     <form [formGroup]="form">
-      <input type="text" formControlName="keywords" />
+      <input type="text" formControlName="firstName" />
+      <input type="text" formControlName="firstName" />
+      <input type="text" formControlName="lastName" />
       <button type="submit">Search</button>
     </form>
 
@@ -32,7 +34,8 @@ import {
 export class RecipeSearchComponent {
   recipes$: Observable<Recipe[]>;
   form = new FormGroup({
-    keywords: new FormControl<string | null>(null),
+    firstName: new FormControl<string | null>(null),
+    lastName: new FormControl<string | null>(null),
   });
 
   private _recipeRepository = inject(RecipeRepository);

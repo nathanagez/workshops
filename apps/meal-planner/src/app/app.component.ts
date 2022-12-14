@@ -6,7 +6,7 @@ import { provideHttpClient } from '@angular/common/http';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'mp-app',
-  template: `<mp-recipe-search></mp-recipe-search>`,
+  template: ` <mp-recipe-search></mp-recipe-search>`,
 })
 export class AppComponent {}
 
