@@ -25,7 +25,6 @@ import { RxState } from '@rx-angular/state';
 
     <ng-container *ngFor="let recipe of recipes$ | async">
       <mp-recipe-preview [recipe]="recipe"> </mp-recipe-preview>
-      <button (click)="removeRecipe(recipe)">REMOVE</button>
     </ng-container>
 
     <div *ngIf="count$ | async as count">Showing {{ count }} results</div>
@@ -37,7 +36,7 @@ export class RecipeSearchComponent {
     keywords: new FormControl<string | null>(null),
   });
 
-  state: RxState<State> = inject(RxState);
+  state: RxState<State> = inject(RxState, { self: true });
   recipes$ = this.state.select('recipes');
   count$ = this.state.select('recipes', 'length');
 
@@ -65,12 +64,6 @@ export class RecipeSearchComponent {
       'keywords',
       this.form.controls.keywords.valueChanges.pipe(debounceTime(50))
     );
-  }
-
-  removeRecipe(recipe: Recipe) {
-    this.state.set(({ recipes }) => {
-      return { recipes: recipes.filter((r) => r.id !== recipe.id) };
-    });
   }
 }
 
