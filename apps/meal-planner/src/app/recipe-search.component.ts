@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Injectable,
+} from '@angular/core';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { RecipeRepository } from './recipe-repository.service';
 import { Recipe } from './recipe';
@@ -8,6 +13,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { MealPlanner } from './meal-planner.service';
 import { RecipeFilterComponent } from './recipe-filter.component';
+import { RecipeSearchPresenter } from './recipe-search.presenter';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,77 +29,26 @@ import { RecipeFilterComponent } from './recipe-filter.component';
   ],
   template: `
     <mp-recipe-filter
-      (keywordsChange)="updateKeywords($event)"
+      (keywordsChange)="presenter.updateKeywords($event)"
     ></mp-recipe-filter>
 
-    <ng-container *ngFor="let recipe of recipes$ | async">
+    <ng-container *ngFor="let recipe of presenter.recipes$ | async">
       <mp-recipe-preview [recipe]="recipe"></mp-recipe-preview>
       <span *ngIf="recipe.isFavorite">✨</span>
-      <button [disabled]="recipe.isAlreadyPlanned" (click)="addRecipe(recipe)">
+      <button
+        [disabled]="recipe.isAlreadyPlanned"
+        (click)="presenter.addRecipe(recipe)"
+      >
         ADD
       </button>
     </ng-container>
 
-    <div *ngIf="count$ | async as count">Showing {{ count }} results</div>
+    <div *ngIf="presenter.count$ | async as count">
+      Showing {{ count }} results
+    </div>
   `,
-  providers: [RxState],
+  providers: [RecipeSearchPresenter],
 })
 export class RecipeSearchComponent {
-  state: RxState<State> = inject(RxState, { self: true });
-  recipes$ = this.state.select(
-    selectSlice(['recipes', 'favoriteRecipeId', 'plannedRecipes']),
-    map((state) => {
-      return state.recipes?.map((recipe) => {
-        return {
-          ...recipe,
-          isFavorite: recipe.id === state.favoriteRecipeId,
-          isAlreadyPlanned:
-            state.plannedRecipes.find((r) => r.id === recipe.id) != null,
-        };
-      });
-    })
-  );
-  count$ = this.state.select(map((state) => state.recipes?.length ?? 0));
-
-  private _mealPlanner = inject(MealPlanner);
-  private _recipeRepository = inject(RecipeRepository);
-
-  constructor() {
-    this.state.set({
-      keywords: null,
-      recipes: null,
-      favoriteRecipeId: null,
-    });
-
-    /* Sync meal planner favorite recipe id here. */
-    this.state.connect('favoriteRecipeId', this._mealPlanner.favoriteRecipeId$);
-    this.state.connect('plannedRecipes', this._mealPlanner.recipes$);
-
-    /* Fetch recipes each time keywords change. */
-    this.state.connect(
-      'recipes',
-      this.state
-        .select('keywords')
-        .pipe(
-          switchMap((keywords) =>
-            this._recipeRepository.getRecipes({ keywords })
-          )
-        )
-    );
-  }
-
-  addRecipe(recipe: Recipe) {
-    this._mealPlanner.addRecipe(recipe);
-  }
-
-  updateKeywords(keywords: string | null) {
-    this.state.set({ keywords });
-  }
-}
-
-interface State {
-  keywords: string | null;
-  plannedRecipes: Recipe[];
-  recipes: Recipe[] | null;
-  favoriteRecipeId: string | null;
+  presenter = inject(RecipeSearchPresenter, { self: true });
 }
