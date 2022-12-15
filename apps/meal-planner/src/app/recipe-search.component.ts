@@ -25,6 +25,7 @@ import { RxState } from '@rx-angular/state';
 
     <ng-container *ngFor="let recipe of recipes$ | async">
       <mp-recipe-preview [recipe]="recipe"> </mp-recipe-preview>
+      <button (click)="addRecipe(recipe)">ADD</button>
     </ng-container>
 
     <div *ngIf="count$ | async as count">Showing {{ count }} results</div>
@@ -64,6 +65,10 @@ export class RecipeSearchComponent {
       'keywords',
       this.form.controls.keywords.valueChanges.pipe(debounceTime(50))
     );
+  }
+
+  addRecipe(recipe: Recipe) {
+    // @todo add to MealPlanner
   }
 }
 
