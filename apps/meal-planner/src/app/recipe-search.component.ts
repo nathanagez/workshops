@@ -6,6 +6,7 @@ import { RecipePreviewComponent } from './recipe-preview.component';
 import { debounceTime, switchMap } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RxState } from '@rx-angular/state';
+import { MealPlanner } from './meal-planner.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,6 +42,7 @@ export class RecipeSearchComponent {
   recipes$ = this.state.select('recipes');
   count$ = this.state.select('recipes', 'length');
 
+  private _mealPlanner = inject(MealPlanner);
   private _recipeRepository = inject(RecipeRepository);
 
   constructor() {
@@ -68,7 +70,7 @@ export class RecipeSearchComponent {
   }
 
   addRecipe(recipe: Recipe) {
-    // @todo add to MealPlanner
+    this._mealPlanner.addRecipe(recipe);
   }
 }
 
