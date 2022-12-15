@@ -5,7 +5,7 @@ import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RxState } from '@rx-angular/state';
+import { RxState, selectSlice } from '@rx-angular/state';
 import { MealPlanner } from './meal-planner.service';
 
 @Component({
@@ -27,7 +27,9 @@ import { MealPlanner } from './meal-planner.service';
     <ng-container *ngFor="let recipe of recipes$ | async">
       <mp-recipe-preview [recipe]="recipe"> </mp-recipe-preview>
       <span *ngIf="recipe.isFavorite">✨</span>
-      <button (click)="addRecipe(recipe)">ADD</button>
+      <button [disabled]="recipe.isAlreadyPlanned" (click)="addRecipe(recipe)">
+        ADD
+      </button>
     </ng-container>
 
     <div *ngIf="count$ | async as count">Showing {{ count }} results</div>
@@ -41,11 +43,14 @@ export class RecipeSearchComponent {
 
   state: RxState<State> = inject(RxState, { self: true });
   recipes$ = this.state.select(
+    selectSlice(['recipes', 'favoriteRecipeId', 'plannedRecipes']),
     map((state) => {
       return state.recipes?.map((recipe) => {
         return {
           ...recipe,
           isFavorite: recipe.id === state.favoriteRecipeId,
+          isAlreadyPlanned:
+            state.plannedRecipes.find((r) => r.id === recipe.id) != null,
         };
       });
     })
@@ -64,6 +69,7 @@ export class RecipeSearchComponent {
 
     /* Sync meal planner favorite recipe id here. */
     this.state.connect('favoriteRecipeId', this._mealPlanner.favoriteRecipeId$);
+    this.state.connect('plannedRecipes', this._mealPlanner.recipes$);
 
     /* Fetch recipes each time keywords change. */
     this.state.connect(
@@ -91,6 +97,7 @@ export class RecipeSearchComponent {
 
 interface State {
   keywords: string | null;
+  plannedRecipes: Recipe[];
   recipes: Recipe[] | null;
   favoriteRecipeId: string | null;
 }
