@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RecipeSearchComponent } from './recipe-search.component';
 import { provideHttpClient } from '@angular/common/http';
 import { MealCounterComponent } from './meal-counter.component';
+import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
