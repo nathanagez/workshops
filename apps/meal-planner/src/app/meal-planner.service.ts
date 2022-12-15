@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Recipe } from './recipe';
 import {
   bufferTime,
@@ -13,7 +13,7 @@ import { RxState } from '@rx-angular/state';
 @Injectable({
   providedIn: 'root',
 })
-export class MealPlanner {
+export class MealPlanner implements OnDestroy {
   /* Selectors */
 
   count$: Observable<number>;
@@ -63,9 +63,17 @@ export class MealPlanner {
       }
 
       return {
-        recipes: [...state.recipes, recipe],
+        recipes: [
+          ...state.recipes,
+          // @todo add typing
+          { ...recipe, createdAt: new Date().toISOString() },
+        ],
       };
     });
+  }
+
+  ngOnDestroy() {
+    this._state.ngOnDestroy();
   }
 
   private _getInitialState(): State {
