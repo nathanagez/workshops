@@ -1,41 +1,38 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from './recipe';
-import {
-  BehaviorSubject,
-  Observable,
-  ReplaySubject,
-  distinctUntilChanged,
-  map,
-  share,
-} from 'rxjs';
+import { Observable } from 'rxjs';
+import { RxState } from '@rx-angular/state';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MealPlanner {
-  recipes$: Observable<Recipe[]>;
   count$: Observable<number>;
+  favoriteRecipeId$: Observable<string | null>;
 
-  private _recipes$ = new BehaviorSubject<Recipe[]>([]);
+  private _state = new RxState<State>();
 
   constructor() {
-    this.recipes$ = this._recipes$.asObservable();
-    this.count$ = this._recipes$.pipe(
-      distinctUntilChanged(),
-      map((recipes) => {
-        console.log('computing length...');
-        return recipes.length;
-      }),
-      distinctUntilChanged(),
-      share({
-        connector: () => new ReplaySubject(1),
-      })
-    );
+    this._state.set({
+      recipes: [],
+      favoriteRecipeId: null,
+    });
+
+    this.count$ = this._state.select('recipes', 'length');
+    this.favoriteRecipeId$ = this._state.select('favoriteRecipeId');
   }
 
   addRecipe(recipe: Recipe) {
-    const recipes = [...this._recipes$.value, recipe];
-    this._recipes$.next(recipes);
-    this._recipes$.next(recipes);
+    this._state.set((state) => {
+      return {
+        favoriteRecipeId: recipe.id,
+        recipes: [...state.recipes, recipe],
+      };
+    });
   }
+}
+
+interface State {
+  recipes: Recipe[];
+  favoriteRecipeId: string | null;
 }
