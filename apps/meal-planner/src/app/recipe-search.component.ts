@@ -7,6 +7,7 @@ import { debounceTime, map, Observable, switchMap } from 'rxjs';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RxState, selectSlice } from '@rx-angular/state';
 import { MealPlanner } from './meal-planner.service';
+import { RecipeFilterComponent } from './recipe-filter.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,14 +19,15 @@ import { MealPlanner } from './meal-planner.service';
     AsyncPipe,
     ReactiveFormsModule,
     NgIf,
+    RecipeFilterComponent,
   ],
   template: `
-    <form [formGroup]="form">
-      <input type="text" formControlName="keywords" />
-    </form>
+    <mp-recipe-filter
+      (keywordsChange)="updateKeywords($event)"
+    ></mp-recipe-filter>
 
     <ng-container *ngFor="let recipe of recipes$ | async">
-      <mp-recipe-preview [recipe]="recipe"> </mp-recipe-preview>
+      <mp-recipe-preview [recipe]="recipe"></mp-recipe-preview>
       <span *ngIf="recipe.isFavorite">✨</span>
       <button [disabled]="recipe.isAlreadyPlanned" (click)="addRecipe(recipe)">
         ADD
@@ -37,10 +39,6 @@ import { MealPlanner } from './meal-planner.service';
   providers: [RxState],
 })
 export class RecipeSearchComponent {
-  form = new FormGroup({
-    keywords: new FormControl<string | null>(null),
-  });
-
   state: RxState<State> = inject(RxState, { self: true });
   recipes$ = this.state.select(
     selectSlice(['recipes', 'favoriteRecipeId', 'plannedRecipes']),
@@ -82,16 +80,14 @@ export class RecipeSearchComponent {
           )
         )
     );
-
-    /* Sync reactive form with state. */
-    this.state.connect(
-      'keywords',
-      this.form.controls.keywords.valueChanges.pipe(debounceTime(50))
-    );
   }
 
   addRecipe(recipe: Recipe) {
     this._mealPlanner.addRecipe(recipe);
+  }
+
+  updateKeywords(keywords: string | null) {
+    this.state.set({ keywords });
   }
 }
 
