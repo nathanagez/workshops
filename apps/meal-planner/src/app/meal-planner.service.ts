@@ -7,6 +7,9 @@ import { RxState } from '@rx-angular/state';
   providedIn: 'root',
 })
 export class MealPlanner {
+
+  /* Selectors */
+
   count$: Observable<number>;
   favoriteRecipeId$: Observable<string | null>;
 
@@ -22,10 +25,13 @@ export class MealPlanner {
     this.favoriteRecipeId$ = this._state.select('favoriteRecipeId');
   }
 
+  /* Actions. */
+
   addRecipe(recipe: Recipe) {
     this._state.set((state) => {
       return {
-        favoriteRecipeId: recipe.id,
+        /* Mark first added recipe as favorite if no favorite was set yet. */
+        favoriteRecipeId: state.favoriteRecipeId ?? recipe.id,
         recipes: [...state.recipes, recipe],
       };
     });
