@@ -1,13 +1,8 @@
 import { Component } from '@angular/core';
-import { NxWelcomeComponent } from './nx-welcome.component';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent],
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  template: '<h1>Hello</h1>',
 })
-export class AppComponent {
-  title = 'whiskmate';
-}
+export class AppComponent {}
