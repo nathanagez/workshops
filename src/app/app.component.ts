@@ -8,6 +8,10 @@ import { RecipeCarouselComponent } from './recipe-carousel.component';
   template: ` 
   <h1>Hello</h1> 
   <app-recipe-carousel/>
+  <hr>
+  <app-recipe-carousel/>
+  <hr>
+  <app-recipe-carousel/>
   `,
 })
 export class AppComponent {}

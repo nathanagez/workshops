@@ -1,17 +1,14 @@
-import { Component, NgModule } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface Recipe {
-  id: string;
-  name: string;
-}
+import { Recipe } from './recipe';
+import { RecipePreviewComponent } from './recipe-preview.component';
 
 @Component({
   selector: 'app-recipe-carousel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RecipePreviewComponent],
   template: `
-    <div>{{ recipes[index].name }}</div>
+    <app-recipe-preview [recipe]="recipes[index]"/>
     <button [disabled]="!hasPrevious()" (click)="goToPrevious()">
       PREVIOUS
     </button>
