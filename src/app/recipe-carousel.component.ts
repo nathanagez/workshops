@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 interface Recipe {
   id: string;
@@ -8,13 +9,17 @@ interface Recipe {
 @Component({
   selector: 'app-recipe-carousel',
   standalone: true,
+  imports: [CommonModule],
   template: `
-    <div>{{ recipes[0].name }}</div>
-    <button [disabled]="false">PREVIOUS</button>
-    <button (click)="goToNext()">NEXT</button>
+    <div>{{ recipes[index].name }}</div>
+    <button [disabled]="!hasPrevious()" (click)="goToPrevious()">
+      PREVIOUS
+    </button>
+    <button [disabled]="!hasNext()" (click)="goToNext()">NEXT</button>
   `,
 })
 export class RecipeCarouselComponent {
+  index = 0;
   recipes: Recipe[] = [
     {
       id: 'burger',
@@ -30,7 +35,19 @@ export class RecipeCarouselComponent {
     },
   ];
 
+  hasPrevious() {
+    return this.index > 0;
+  }
+
+  hasNext() {
+    return this.index < this.recipes.length - 1;
+  }
+
   goToNext() {
-    console.log('goToNext');
+    this.index++;
+  }
+
+  goToPrevious() {
+    this.index--;
   }
 }
