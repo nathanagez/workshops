@@ -1,17 +1,12 @@
 import { Component } from '@angular/core';
-import { RecipeCarouselComponent } from './recipe-carousel.component';
+import { RecipeSearchComponent } from './recipe-search.component';
 
 @Component({
   standalone: true,
   selector: 'app-root',
-  imports: [RecipeCarouselComponent],
+  imports: [RecipeSearchComponent],
   template: ` 
-  <h1>Hello</h1> 
-  <app-recipe-carousel/>
-  <hr>
-  <app-recipe-carousel/>
-  <hr>
-  <app-recipe-carousel/>
+  <app-recipe-search/>
   `,
 })
 export class AppComponent {}
