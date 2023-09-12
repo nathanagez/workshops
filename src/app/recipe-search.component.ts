@@ -4,23 +4,26 @@ import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
 import { FormsModule } from '@angular/forms';
+import { RecipeFilterComponent } from './recipe-filter.component';
 
 @Component({
   selector: 'app-recipe-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, RecipePreviewComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RecipeFilterComponent,
+    RecipePreviewComponent,
+  ],
   template: `
-    <form (ngSubmit)="search()">
-      <input [(ngModel)]="keywords" name="keywords" type="text" placeholder="keywords...">
-      <button type="submit">SEARCH</button>
-    </form>
-    <hr>
-    <app-recipe-preview *ngFor="let recipe of recipes" [recipe]="recipe"/>
+      <app-recipe-filter (filterSubmit)="search($event)"/>
+      <hr>
+      <app-recipe-preview *ngFor="let recipe of recipes" [recipe]="recipe"/>
+
   `,
 })
 export class RecipeSearchComponent implements OnInit {
   recipes?: Recipe[];
-  keywords?: string;
 
   private _repo = inject(RecipeRepository);
 
@@ -28,9 +31,9 @@ export class RecipeSearchComponent implements OnInit {
     this.search();
   }
 
-  search() {
+  search(keywords?: string) {
     this._repo
-      .searchRecipes(this.keywords)
+      .searchRecipes(keywords)
       .subscribe((recipes) => (this.recipes = recipes));
   }
 }
