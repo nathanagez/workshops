@@ -57,8 +57,16 @@
       "unitTestRunner": "jest"
     },
     "@nx/angular:component": {
-      "style": "css"
+      "style": "css",
+      "standalone": true,
+      "skipTests": true,
+      "inlineStyle": true,
+      "inlineTemplate": true,
+      "flat": true
     }
   },
-  "defaultProject": "whiskmate"
+  "defaultProject": "whiskmate",
+  "cli": {
+    "defaultCollection": "@nx/angular"
+  }
 }
