@@ -7,16 +7,38 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <form (ngSubmit)="onSubmit()">
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
       <input
+        #keywordsControl="ngModel"
         [(ngModel)]="keywords"
         name="keywords"
+        required
         type="text"
         placeholder="keywords..."
       />
-      <button type="submit">SEARCH</button>
+
+      <button [disabled]="!form.valid" type="submit">SEARCH</button>
+
+      <p
+        class="error"
+        *ngIf="keywordsControl.dirty && keywordsControl.hasError('required')"
+      >
+        Keywords are required.
+      </p>
     </form>
   `,
+  styles: [
+    `
+      input.ng-dirty.ng-invalid {
+        background-color: red;
+      }
+
+      .error {
+        font-size: small;
+        color: red;
+      }
+    `,
+  ],
 })
 export class RecipeFilterComponent {
   @Output() filterSubmit = new EventEmitter<string>();

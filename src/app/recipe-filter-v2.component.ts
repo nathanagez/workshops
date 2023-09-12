@@ -1,0 +1,97 @@
+import { Component, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { filter, map, Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-recipe-filter-v2',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  template: `
+    <form [formGroup]="form">
+      <input formControlName="keywords" type="text" placeholder="keywords..." />
+      <input
+        formControlName="minIngredients"
+        type="number"
+        placeholder="min ingredients..."
+      />
+      <input
+        formControlName="maxIngredients"
+        type="number"
+        placeholder="max ingredients..."
+      />
+
+      <p
+        class="error"
+        *ngIf="maxIngredients.dirty && maxIngredients.hasError('min')"
+      >
+        Max ingredients can't be negative.
+      </p>
+      <p
+        class="error"
+        *ngIf="minIngredients.dirty && minIngredients.hasError('min')"
+      >
+        Min ingredients can't be negative.
+      </p>
+    </form>
+  `,
+  styles: [
+    `
+      input.ng-dirty.ng-invalid {
+        background-color: red;
+      }
+
+      .error {
+        font-size: small;
+        color: red;
+      }
+    `,
+  ],
+})
+export class RecipeFilterV2Component implements OnInit {
+  @Output() filterChange: Observable<string | undefined>;
+
+  form = new FormGroup({
+    keywords: new FormControl<string | null>(null),
+    maxIngredients: new FormControl<number>(10, {
+      nonNullable: true,
+      validators: [Validators.min(0)],
+    }),
+    minIngredients: new FormControl<number>(0, {
+      nonNullable: true,
+      validators: [Validators.min(0), isEven],
+    }),
+  });
+  maxIngredients = this.form.controls.maxIngredients;
+  minIngredients = this.form.controls.minIngredients;
+
+  constructor() {
+    this.filterChange = this.form.valueChanges.pipe(
+      filter(() => this.form.valid),
+      map((value) => value.keywords ?? undefined)
+    );
+  }
+
+  ngOnInit() {
+    this.minIngredients.valueChanges.subscribe((min) => {
+      if (this.maxIngredients.value < min) {
+        this.maxIngredients.setValue(min);
+      }
+    });
+
+    this.maxIngredients.valueChanges.subscribe((max) => {
+      if (this.minIngredients.value > max) {
+        this.minIngredients.setValue(max);
+      }
+    });
+  }
+}
+
+const isEven: ValidatorFn = (control) =>
+  control.value % 2 === 0 ? null : { isEven: 'value is not even' };
