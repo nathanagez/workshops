@@ -63,6 +63,9 @@
       "inlineStyle": true,
       "inlineTemplate": true,
       "flat": true
+    },
+    "@nx/angular:service": {
+      "skipTests": true
     }
   },
   "defaultProject": "whiskmate",

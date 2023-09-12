@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
+import { RecipeRepository } from './recipe-repository.service';
 
 @Component({
   selector: 'app-recipe-search',
@@ -15,28 +15,9 @@ import { RecipePreviewComponent } from './recipe-preview.component';
 export class RecipeSearchComponent implements OnInit {
   recipes?: Recipe[];
 
-  constructor(private _httpClient: HttpClient) {}
+  private _repo = inject(RecipeRepository);
 
   ngOnInit() {
-    this._httpClient
-      .get<RecipesResponseDto>('https://recipes-api.marmicode.io/recipes')
-      .subscribe((data) => {
-        this.recipes = data.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          pictureUri: item.picture_uri,
-        }));
-      });
+    this._repo.searchRecipes().subscribe((recipes) => (this.recipes = recipes));
   }
-}
-
-interface RecipesResponseDto {
-  items: RecipeDto[];
-}
-
-interface RecipeDto {
-  id: string;
-  created_at: string;
-  name: string;
-  picture_uri: string;
 }
