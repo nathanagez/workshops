@@ -8,11 +8,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { filter, map, Observable } from 'rxjs';
+import { FormErrorsComponent } from './form-errors.component';
 
 @Component({
   selector: 'app-recipe-filter-v2',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormErrorsComponent],
   template: `
     <form [formGroup]="form">
       <input formControlName="keywords" type="text" placeholder="keywords..." />
@@ -27,29 +28,19 @@ import { filter, map, Observable } from 'rxjs';
         placeholder="max ingredients..."
       />
 
-      <p
-        class="error"
-        *ngIf="maxIngredients.dirty && maxIngredients.hasError('min')"
-      >
-        Max ingredients can't be negative.
-      </p>
-      <p
-        class="error"
-        *ngIf="minIngredients.dirty && minIngredients.hasError('min')"
-      >
-        Min ingredients can't be negative.
-      </p>
+      <app-form-errors
+          [form]="form"
+          [controlNames]="{
+        keywords: 'Keywords',
+        maxIngredients: 'Max ingredients',
+        minIngredients: 'Min ingredients'
+      }"/>
     </form>
   `,
   styles: [
     `
       input.ng-dirty.ng-invalid {
         background-color: red;
-      }
-
-      .error {
-        font-size: small;
-        color: red;
       }
     `,
   ],
