@@ -10,6 +10,7 @@ import { Recipe } from './recipe';
   template: `
     <h2>{{ recipe.name }}</h2>
     <p>{{ recipe.description ?? '(no description)' }}</p>
+    <ng-content/>
   `,
   styles: [
     `
@@ -29,8 +30,4 @@ import { Recipe } from './recipe';
 })
 export class RecipePreviewComponent {
   @Input({ required: true }) recipe!: Recipe;
-
-  constructor() {
-    console.log('RecipePreviewComponent constructor');
-  }
 }
