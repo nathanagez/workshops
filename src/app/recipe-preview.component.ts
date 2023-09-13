@@ -9,7 +9,7 @@ import { Recipe } from './recipe';
   imports: [CommonModule],
   template: `
     <h2>{{ recipe.name }}</h2>
-    <p>{{ this.recipe.description ?? '(no description)' }}</p>
+    <p>{{ recipe.description ?? '(no description)' }}</p>
   `,
   styles: [
     `
