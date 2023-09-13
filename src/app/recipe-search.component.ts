@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   signal,
 } from '@angular/core';
@@ -10,13 +9,7 @@ import { RecipePreviewComponent } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
 import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipeFilterV2Component } from './recipe-filter-v2.component';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  interval,
-  retry,
-  switchMap,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -42,22 +35,9 @@ export class RecipeSearchComponent {
     toObservable(this.keywords).pipe(
       debounceTime(100),
       distinctUntilChanged(),
-      switchMap((keywords) =>
-        this._repo.searchRecipes(keywords).pipe(
-          retry({
-            delay: (_, retryCount) => interval(retryCount * 1000),
-          })
-        )
-      )
+      switchMap((keywords) => this._repo.searchRecipes(keywords))
     )
   );
 
   private _repo = inject(RecipeRepository);
-
-  constructor() {
-    effect(() => {
-      console.log('keywords', this.keywords());
-      console.log('recipes', this.recipes());
-    });
-  }
 }

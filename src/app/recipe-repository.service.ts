@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom, map, Observable } from 'rxjs';
+import { interval, lastValueFrom, map, Observable, retry } from 'rxjs';
 import { Recipe } from './recipe';
 
 @Injectable({
@@ -23,7 +23,10 @@ export class RecipeRepository {
             name: item.name,
             pictureUri: item.picture_uri,
           }))
-        )
+        ),
+        retry({
+          delay: (_, retryCount) => interval(retryCount * 1000),
+        })
       );
   }
 
