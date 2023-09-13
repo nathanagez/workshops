@@ -12,6 +12,8 @@ import { RecipeFilterV2Component } from './recipe-filter-v2.component';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { trackById } from './utils';
+import { Recipe } from './recipe';
+import { Cart } from './cart.service';
 
 @Component({
   selector: 'app-recipe-search',
@@ -27,7 +29,9 @@ import { trackById } from './utils';
         <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
         <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
         <hr>
-        <app-recipe-preview *ngFor="let recipe of recipes(); trackBy: trackById" [recipe]="recipe"/>
+        <app-recipe-preview *ngFor="let recipe of recipes(); trackBy: trackById"  [recipe]="recipe">
+          <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
+        </app-recipe-preview>
     `,
 })
 export class RecipeSearchComponent {
@@ -41,5 +45,14 @@ export class RecipeSearchComponent {
   );
   trackById = trackById;
 
+  private _cart = inject(Cart);
   private _repo = inject(RecipeRepository);
+
+  addRecipe(recipe: Recipe) {
+    this._cart.addRecipe(recipe);
+  }
+
+  canAddRecipe(recipe: Recipe) {
+    return this._cart.canAddRecipe(recipe);
+  }
 }

@@ -1,15 +1,25 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RecipeSearchComponent } from './recipe-search.component';
 import { RecipeCarouselComponent } from './recipe-carousel.component';
+import { SignalImmutabilityDemoComponent } from './signal-immutability-demo.component';
+import { Cart } from './cart.service';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
-  imports: [RecipeSearchComponent, RecipeCarouselComponent],
+  imports: [
+    RecipeSearchComponent,
+    RecipeCarouselComponent,
+    SignalImmutabilityDemoComponent,
+  ],
   template: `
-<!--        <app-recipe-carousel/>-->
-        <app-recipe-search/>
-    `,
+<!--      <app-signal-immutability-demo/>-->
+      <!--        <app-recipe-carousel/>-->
+      Recipes in cart: {{count()}}
+      <app-recipe-search/>
+  `,
 })
-export class AppComponent {}
+export class AppComponent {
+  count = inject(Cart).count;
+}
