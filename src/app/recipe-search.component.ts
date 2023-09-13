@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Recipe } from './recipe';
 import { RecipePreviewComponent } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
-import { FormsModule } from '@angular/forms';
 import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipeFilterV2Component } from './recipe-filter-v2.component';
 
@@ -12,7 +11,6 @@ import { RecipeFilterV2Component } from './recipe-filter-v2.component';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     RecipeFilterComponent,
     RecipeFilterV2Component,
     RecipePreviewComponent,
