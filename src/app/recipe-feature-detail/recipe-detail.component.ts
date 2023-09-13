@@ -6,17 +6,17 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RecipeRepository } from './recipe-repository.service';
-import { EMPTY } from 'rxjs';
-import { RecipePreviewComponent } from './recipe-preview.component';
 import { rxComputed } from '@jscutlery/rx-computed';
+import { EMPTY } from 'rxjs';
+import { RecipeRepository } from '../recipe-data-access/recipe-repository.service';
+import { RecipePreviewComponent } from '../recipe-ui/recipe-preview.component';
 
 @Component({
   selector: 'app-recipe-detail',
   standalone: true,
   imports: [CommonModule, RecipePreviewComponent],
   template: `
-    <app-recipe-preview *ngIf="recipe() as recipeValue" [recipe]="recipeValue"/>`,
+        <app-recipe-preview *ngIf="recipe() as recipeValue" [recipe]="recipeValue"/>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeDetailComponent {

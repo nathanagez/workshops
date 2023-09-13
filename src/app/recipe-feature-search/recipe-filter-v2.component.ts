@@ -13,7 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { filter, map, Observable } from 'rxjs';
-import { FormErrorsComponent } from './form-errors.component';
+import { FormErrorsComponent } from '../ui/form-errors.component';
 
 @Component({
   selector: 'app-recipe-filter-v2',

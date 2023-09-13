@@ -5,15 +5,15 @@ import {
   signal,
 } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
-import { RecipePreviewComponent } from './recipe-preview.component';
-import { RecipeRepository } from './recipe-repository.service';
 import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipeFilterV2Component } from './recipe-filter-v2.component';
-import { trackById } from './utils';
-import { Recipe } from './recipe';
-import { Cart } from './cart.service';
 import { rxComputed } from '@jscutlery/rx-computed';
 import { suspensify } from '@jscutlery/operators';
+import { RecipePreviewComponent } from '../recipe-ui/recipe-preview.component';
+import { trackById } from '../utils/track-by-id';
+import { Cart } from '../recipe-domain/cart.service';
+import { RecipeRepository } from '../recipe-data-access/recipe-repository.service';
+import { Recipe } from '../recipe-domain/recipe';
 
 @Component({
   selector: 'app-recipe-search',
@@ -27,20 +27,20 @@ import { suspensify } from '@jscutlery/operators';
     NgIf,
   ],
   template: `
-    <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
-    <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
-    <hr>
-    
-    <div *ngIf="recipes()?.pending">...</div>
-    
-    <div *ngIf="recipes()?.error">Oups!</div>
+        <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
+        <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
+        <hr>
 
-    <div *ngIf="recipes()?.value?.length === 0">No result.</div>
-    
-    <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
-      <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
-    </app-recipe-preview>
-  `,
+        <div *ngIf="recipes()?.pending">...</div>
+
+        <div *ngIf="recipes()?.error">Oups!</div>
+
+        <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+
+        <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
+            <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
+        </app-recipe-preview>
+    `,
 })
 export class RecipeSearchComponent {
   keywords = signal<string | undefined>(undefined);

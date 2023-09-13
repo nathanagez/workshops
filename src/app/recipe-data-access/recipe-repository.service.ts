@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { interval, lastValueFrom, map, Observable, retry } from 'rxjs';
-import { Recipe } from './recipe';
+import { lastValueFrom, map, Observable } from 'rxjs';
+import { Recipe } from '../recipe-domain/recipe';
 
 @Injectable({
   providedIn: 'root',

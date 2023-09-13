@@ -3,15 +3,17 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: 'carousel',
-    loadComponent: () => import('./recipe-carousel.component'),
+    loadComponent: () => import('./demos/recipe-carousel.component'),
   },
   {
     path: 'search',
-    loadComponent: () => import('./recipe-search.component'),
+    loadComponent: () =>
+      import('./recipe-feature-search/recipe-search.component'),
   },
   {
     path: 'recipe/:recipeId',
-    loadComponent: () => import('./recipe-detail.component'),
+    loadComponent: () =>
+      import('./recipe-feature-detail/recipe-detail.component'),
   },
   // {
   //   path: 'admin',

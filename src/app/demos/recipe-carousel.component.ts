@@ -1,12 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Recipe } from './recipe';
-import { RecipePreviewComponent } from './recipe-preview.component';
+import { Recipe } from '../recipe-domain/recipe';
+import { RecipePreviewComponent } from '../recipe-ui/recipe-preview.component';
 
 @Component({
   selector: 'app-recipe-carousel',

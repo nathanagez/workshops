@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Recipe } from './recipe';
+import { Recipe } from '../recipe-domain/recipe';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -8,10 +8,10 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   template: `
-      <h2><a [routerLink]="['/recipe', recipe.id]">{{ recipe.name }}</a></h2>
-      <p>{{ recipe.description ?? '(no description)' }}</p>
-      <ng-content/>
-  `,
+        <h2><a [routerLink]="['/recipe', recipe.id]">{{ recipe.name }}</a></h2>
+        <p>{{ recipe.description ?? '(no description)' }}</p>
+        <ng-content/>
+    `,
   styles: [
     `
       :host {
