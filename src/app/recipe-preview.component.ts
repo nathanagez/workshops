@@ -9,7 +9,7 @@ import { Recipe } from './recipe';
   imports: [CommonModule],
   template: `
     <h2>{{ recipe.name }}</h2>
-    <p>{{ getDescription() }}</p>
+    <p>{{ this.recipe.description ?? '(no description)' }}</p>
   `,
   styles: [
     `
@@ -29,8 +29,4 @@ import { Recipe } from './recipe';
 })
 export class RecipePreviewComponent {
   @Input({ required: true }) recipe!: Recipe;
-
-  getDescription() {
-    return this.recipe.description ?? '(no description)';
-  }
 }
