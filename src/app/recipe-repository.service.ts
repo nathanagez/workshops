@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { lastValueFrom, map, Observable } from 'rxjs';
 import { Recipe } from './recipe';
 
 @Injectable({
@@ -25,6 +25,20 @@ export class RecipeRepository {
           }))
         )
       );
+  }
+
+  async searchRecipesV2(keywords?: string): Promise<Recipe[]> {
+    const response = await lastValueFrom(
+      this._httpClient.get<RecipesResponseDto>(
+        `https://recipes-api.marmicode.io/recipes`,
+        { params: keywords ? { q: keywords } : undefined }
+      )
+    );
+    return response.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      pictureUri: item.picture_uri,
+    }));
   }
 }
 
