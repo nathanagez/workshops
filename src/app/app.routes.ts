@@ -9,6 +9,10 @@ export const routes: Routes = [
     path: 'search',
     loadComponent: () => import('./recipe-search.component'),
   },
+  {
+    path: 'recipe/:recipeId',
+    loadComponent: () => import('./recipe-detail.component'),
+  },
   // {
   //   path: 'admin',
   //   loadChildren: () => import('./admin/admin.routes'),

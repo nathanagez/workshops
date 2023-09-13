@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { Recipe } from './recipe';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-preview',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule],
+  imports: [RouterLink],
   template: `
-    <h2>{{ recipe.name }}</h2>
-    <p>{{ recipe.description ?? '(no description)' }}</p>
-    <ng-content/>
+      <h2><a [routerLink]="['/recipe', recipe.id]">{{ recipe.name }}</a></h2>
+      <p>{{ recipe.description ?? '(no description)' }}</p>
+      <ng-content/>
   `,
   styles: [
     `

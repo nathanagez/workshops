@@ -37,11 +37,25 @@ export class RecipeRepository {
         { params: keywords ? { q: keywords } : undefined }
       )
     );
-    return response.items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      pictureUri: item.picture_uri,
-    }));
+    return response.items.map((data) => this._toRecipe(data));
+  }
+
+  getRecipe(recipeId: string) {
+    return this._httpClient
+      .get<RecipeDto>(
+        `https://recipes-api.marmicode.io/recipes/${encodeURIComponent(
+          recipeId
+        )}`
+      )
+      .pipe(map((data) => this._toRecipe(data)));
+  }
+
+  private _toRecipe(data: RecipeDto): Recipe {
+    return {
+      id: data.id,
+      name: data.name,
+      pictureUri: data.picture_uri,
+    };
   }
 }
 

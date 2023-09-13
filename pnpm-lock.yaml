@@ -29,6 +29,9 @@ dependencies:
   '@angular/router':
     specifier: ~16.2.0
     version: 16.2.0(@angular/common@16.2.0)(@angular/core@16.2.0)(@angular/platform-browser@16.2.0)(rxjs@7.8.1)
+  '@jscutlery/rx-computed':
+    specifier: 0.2.2
+    version: 0.2.2(@angular/core@16.2.0)(@jscutlery/operators@2.1.2)
   '@nx/angular':
     specifier: 16.8.1
     version: 16.8.1(@angular-devkit/build-angular@16.2.1)(@angular-devkit/core@16.2.0)(@angular-devkit/schematics@16.2.1)(@schematics/angular@16.2.1)(@types/node@16.11.7)(eslint@8.46.0)(nx@16.8.1)(rxjs@7.8.1)(ts-node@10.9.1)(typescript@5.1.3)
@@ -3060,6 +3063,18 @@ packages:
       jest-mock: 29.6.3
       jest-util: 29.6.3
 
+  /@jest/globals@29.5.0:
+    resolution: {integrity: sha512-S02y0qMWGihdzNbUiqSAiKSpSozSuHX5UYc7QbnHP+D9Lyw8DgGGCinrN9uSuHPeKgSSzvPom2q1nAtBvUsvPQ==}
+    engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
+    dependencies:
+      '@jest/environment': 29.6.4
+      '@jest/expect': 29.6.4
+      '@jest/types': 29.6.3
+      jest-mock: 29.6.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /@jest/globals@29.6.4:
     resolution: {integrity: sha512-wVIn5bdtjlChhXAzVXavcY/3PEjf4VqM174BM3eGL5kMxLiZD5CLnbmkEyA1Dwh9q8XjP6E8RwjBsY/iCWrWsA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
@@ -3173,7 +3188,7 @@ packages:
       chalk: 4.1.2
 
   /@jridgewell/gen-mapping@0.3.3:
-    resolution: {integrity: sha512-HLhSWOLRi875zjjMG/r+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
+    resolution: {integrity: sha512-HLhSWOLRi875zjjMG/recipeValue+Nv0oCW8umGb0BgEhyX3dDX3egwZtB8PqLnjz3yedt8R5StBrzcg4aBpnh8UA9D1BoQ==}
     engines: {node: '>=6.0.0'}
     dependencies:
       '@jridgewell/set-array': 1.1.2
@@ -3208,6 +3223,27 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  /@jscutlery/operators@2.1.2(@jest/globals@29.5.0)(rxjs@7.8.1):
+    resolution: {integrity: sha512-eIDwK1R3c3RVLtpk3fDkb3Q784rplCijbv2t6eiaASY5kEQJrtBwE78EElcLhH6wyBmCCBiiDVAOUgLb4O9o8A==}
+    peerDependencies:
+      '@jest/globals': 29.5.0
+      rxjs: '>=6.0.0'
+    dependencies:
+      '@jest/globals': 29.5.0
+      rxjs: 7.8.1
+    dev: false
+
+  /@jscutlery/rx-computed@0.2.2(@angular/core@16.2.0)(@jscutlery/operators@2.1.2):
+    resolution: {integrity: sha512-RSb3BxXWD4ES9xMx5T4fRk+7xlAlf181DqOyIx55fI8kcdgYdze9sGRoWZy5pO6YXA+FHZmtUBoqb7q/aQnL/w==}
+    peerDependencies:
+      '@angular/core': ^16.0.0
+      '@jscutlery/operators': ^2.0.0
+    dependencies:
+      '@angular/core': 16.2.0(rxjs@7.8.1)(zone.js@0.13.0)
+      '@jscutlery/operators': 2.1.2(@jest/globals@29.5.0)(rxjs@7.8.1)
+      tslib: 2.6.2
+    dev: false
 
   /@leichtgewicht/ip-codec@2.0.4:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
@@ -5855,6 +5891,7 @@ packages:
 
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    requiresBuild: true
     peerDependencies:
       supports-color: '*'
     peerDependenciesMeta:
@@ -8578,7 +8615,7 @@ packages:
     engines: {node: '>= 6.13.0'}
 
   /node-gyp-build@4.6.1:
-    resolution: {integrity: sha512-24vnklJmyRS8ViBNI8KbtK/r/DmXQMRiOMXTNz2nrTnAYUwjmEEbnnpB/+kt+yWRv73bPsSPRFddrcIbAxSiMQ==}
+    resolution: {integrity: sha512-24vnklJmyRS8ViBNI8KbtK/recipeValue/DmXQMRiOMXTNz2nrTnAYUwjmEEbnnpB/+kt+yWRv73bPsSPRFddrcIbAxSiMQ==}
     hasBin: true
 
   /node-gyp@9.4.0:
@@ -9056,6 +9093,7 @@ packages:
   /pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
+    requiresBuild: true
     optional: true
 
   /pirates@4.0.6:
@@ -9541,6 +9579,7 @@ packages:
 
   /prr@1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
+    requiresBuild: true
     optional: true
 
   /psl@1.9.0:
@@ -9914,6 +9953,7 @@ packages:
   /semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
+    requiresBuild: true
     optional: true
 
   /semver@6.3.1:
