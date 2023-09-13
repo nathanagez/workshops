@@ -8,8 +8,8 @@ import { RecipeCarouselComponent } from './recipe-carousel.component';
   selector: 'app-root',
   imports: [RecipeSearchComponent, RecipeCarouselComponent],
   template: `
-        <app-recipe-carousel/>
-        <!--<app-recipe-search/>-->
+<!--        <app-recipe-carousel/>-->
+        <app-recipe-search/>
     `,
 })
 export class AppComponent {}
