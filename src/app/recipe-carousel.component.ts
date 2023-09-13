@@ -55,3 +55,5 @@ export class RecipeCarouselComponent {
     setTimeout(() => this.index.update((index) => Math.max(index - 1, 0)), 500);
   }
 }
+
+export default RecipeCarouselComponent;

@@ -56,3 +56,5 @@ export class RecipeSearchComponent {
     return this._cart.canAddRecipe(recipe);
   }
 }
+
+export default RecipeSearchComponent;
