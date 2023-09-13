@@ -11,6 +11,7 @@ import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipeFilterV2Component } from './recipe-filter-v2.component';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { trackById } from './utils';
 
 @Component({
   selector: 'app-recipe-search',
@@ -26,7 +27,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
         <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
         <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
         <hr>
-        <app-recipe-preview *ngFor="let recipe of recipes()" [recipe]="recipe"/>
+        <app-recipe-preview *ngFor="let recipe of recipes(); trackBy: trackById" [recipe]="recipe"/>
     `,
 })
 export class RecipeSearchComponent {
@@ -38,6 +39,7 @@ export class RecipeSearchComponent {
       switchMap((keywords) => this._repo.searchRecipes(keywords))
     )
   );
+  trackById = trackById;
 
   private _repo = inject(RecipeRepository);
 }

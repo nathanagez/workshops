@@ -29,4 +29,8 @@ import { Recipe } from './recipe';
 })
 export class RecipePreviewComponent {
   @Input({ required: true }) recipe!: Recipe;
+
+  constructor() {
+    console.log('RecipePreviewComponent constructor');
+  }
 }
