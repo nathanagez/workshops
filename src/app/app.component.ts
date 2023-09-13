@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RecipeSearchComponent } from './recipe-search.component';
-import { RecipeCarouselComponent } from './recipe-carousel.component';
-import { SignalImmutabilityDemoComponent } from './signal-immutability-demo.component';
 import { Cart } from './cart.service';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
-  imports: [
-    RecipeSearchComponent,
-    RecipeCarouselComponent,
-    SignalImmutabilityDemoComponent,
-  ],
+  imports: [RouterOutlet, RouterLink],
   template: `
-<!--      <app-signal-immutability-demo/>-->
-      <!--        <app-recipe-carousel/>-->
       Recipes in cart: {{count()}}
-      <app-recipe-search/>
+      <router-outlet/>
+
+      <hr>
+      
+      <footer>
+          <a routerLink="/search">Search</a>
+          |
+          <a routerLink="/carousel">Carousel</a>
+      </footer>
   `,
 })
 export class AppComponent {
