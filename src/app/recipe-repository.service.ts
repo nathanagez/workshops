@@ -23,10 +23,7 @@ export class RecipeRepository {
             name: item.name,
             pictureUri: item.picture_uri,
           }))
-        ),
-        retry({
-          delay: (_, retryCount) => interval(retryCount * 1000),
-        })
+        )
       );
   }
 
