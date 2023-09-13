@@ -4,18 +4,16 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { RecipePreviewComponent } from './recipe-preview.component';
 import { RecipeRepository } from './recipe-repository.service';
 import { RecipeFilterComponent } from './recipe-filter.component';
 import { RecipeFilterV2Component } from './recipe-filter-v2.component';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { trackById } from './utils';
 import { Recipe } from './recipe';
 import { Cart } from './cart.service';
-import { RouterLink } from '@angular/router';
 import { rxComputed } from '@jscutlery/rx-computed';
+import { suspensify } from '@jscutlery/operators';
 
 @Component({
   selector: 'app-recipe-search',
@@ -26,20 +24,32 @@ import { rxComputed } from '@jscutlery/rx-computed';
     RecipeFilterComponent,
     RecipeFilterV2Component,
     RecipePreviewComponent,
+    NgIf,
   ],
   template: `
-        <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
-        <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
-        <hr>
-        <app-recipe-preview *ngFor="let recipe of recipes(); trackBy: trackById"  [recipe]="recipe">
-          <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
-        </app-recipe-preview>
-    `,
+    <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
+    <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
+    <hr>
+    
+    <div *ngIf="recipes()?.pending">...</div>
+    
+    <div *ngIf="recipes()?.error">Oups!</div>
+
+    <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+    
+    <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
+      <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
+    </app-recipe-preview>
+  `,
 })
 export class RecipeSearchComponent {
   keywords = signal<string | undefined>(undefined);
 
-  recipes = rxComputed(() => this._repo.searchRecipes(this.keywords()));
+  recipes = rxComputed(() =>
+    this._repo
+      .searchRecipes(this.keywords())
+      .pipe(suspensify({ strict: false }))
+  );
 
   // recipes = toSignal(
   //   toObservable(this.keywords).pipe(
