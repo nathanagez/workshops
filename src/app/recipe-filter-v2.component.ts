@@ -1,4 +1,9 @@
-import { Component, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -12,6 +17,7 @@ import { FormErrorsComponent } from './form-errors.component';
 
 @Component({
   selector: 'app-recipe-filter-v2',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormErrorsComponent],
   template: `

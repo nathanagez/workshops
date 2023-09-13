@@ -62,7 +62,8 @@
       "skipTests": true,
       "inlineStyle": true,
       "inlineTemplate": true,
-      "flat": true
+      "flat": true,
+      "changeDetection": "OnPush"
     },
     "@nx/angular:service": {
       "skipTests": true

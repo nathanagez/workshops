@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Recipe } from './recipe';
 
 @Component({
   selector: 'app-recipe-preview',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule],
   template: `
     <h2>{{ recipe.name }}</h2>
-    <p>{{ recipe.description ?? 'no description' }}</p>
+    <p>{{ getDescription() }}</p>
   `,
   styles: [
     `
@@ -28,4 +29,8 @@ import { Recipe } from './recipe';
 })
 export class RecipePreviewComponent {
   @Input({ required: true }) recipe!: Recipe;
+
+  getDescription() {
+    return this.recipe.description ?? '(no description)';
+  }
 }
