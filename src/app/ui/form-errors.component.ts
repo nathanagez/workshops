@@ -37,22 +37,30 @@ export class FormErrorsComponent {
   }
 
   formErrors = computed(() => {
-    return Object.entries(this._controls() ?? {})?.reduce(
-      (errors, [controlKey, control]) => {
-        const controlErrors = Object.entries(control.errors ?? {}).reduce(
-          (errors, [errorId, errorInfo]) => {
-            return [
-              ...errors,
-              this._getErrorMessage(controlKey, errorId, errorInfo),
-            ];
-          },
-          [] as string[]
+    const errors = Object.entries(this._controls() ?? {})
+      .map(([controlKey, control]) => {
+        return Object.entries(control.errors ?? {}).map(
+          ([errorId, errorInfo]) => {
+            return {
+              controlName: this._controlNames()[controlKey] ?? controlKey,
+              errorId,
+              errorInfo,
+            };
+          }
         );
+      })
+      .flat();
 
-        return [...errors, ...controlErrors];
-      },
-      [] as string[]
-    );
+    return errors.map(({ controlName, errorId, errorInfo }) => {
+      switch (errorId) {
+        case 'required':
+          return `${controlName} is required.`;
+        case 'min':
+          return `${controlName} min value is ${errorInfo['min']}.`;
+        default:
+          return `${controlName} is invalid.`;
+      }
+    });
   });
 
   private _form = signal<FormGroup | null>(null);
@@ -64,21 +72,4 @@ export class FormErrorsComponent {
       EMPTY
   );
   private _controlNames = signal<Record<string, string>>({});
-
-  private _getErrorMessage(
-    controlKey: string,
-    errorId: string,
-    errorInfo: Record<string, unknown>
-  ) {
-    const controlName = this._controlNames()[controlKey] ?? controlKey;
-
-    switch (errorId) {
-      case 'required':
-        return `${controlName} is required.`;
-      case 'min':
-        return `${controlName} min value is ${errorInfo['min']}.`;
-      default:
-        return `${controlName} is invalid.`;
-    }
-  }
 }
