@@ -14,6 +14,7 @@ import { trackById } from '../utils/track-by-id';
 import { Cart } from '../recipe-domain/cart.service';
 import { RecipeRepository } from '../recipe-data-access/recipe-repository.service';
 import { Recipe } from '../recipe-domain/recipe';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-recipe-search',
@@ -25,25 +26,28 @@ import { Recipe } from '../recipe-domain/recipe';
     RecipeFilterV2Component,
     RecipePreviewComponent,
     NgIf,
+    MatButtonModule,
   ],
   template: `
-        <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
-        <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
-        
-        <hr>
+    <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
+    <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
 
-        <div class="container">
-          <div *ngIf="recipes()?.pending">...</div>
+    <hr>
 
-          <div *ngIf="recipes()?.error">Oups!</div>
+    <div class="container">
+      <div *ngIf="recipes()?.pending">...</div>
 
-          <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+      <div *ngIf="recipes()?.error">Oups!</div>
 
-          <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
-            <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
-          </app-recipe-preview>
-        </div>
-    `,
+      <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+
+      <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
+        <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)" mat-stroked-button color="primary">
+          ADD
+        </button>
+      </app-recipe-preview>
+    </div>
+  `,
   styles: [
     `
       .container {

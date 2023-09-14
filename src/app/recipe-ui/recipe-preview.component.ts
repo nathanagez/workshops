@@ -26,7 +26,7 @@ import { NgIf, NgOptimizedImage } from '@angular/common';
               <mat-card-content>
                   <p>{{ recipe.description ?? '(no description)' }}</p>
               </mat-card-content>
-              <mat-card-actions>
+              <mat-card-actions class="actions">
                   <ng-content/>
               </mat-card-actions>
           </mat-card>
@@ -56,6 +56,11 @@ import { NgIf, NgOptimizedImage } from '@angular/common';
 
       p {
         font-style: italic;
+      }
+
+      .actions {
+        display: flex;
+        justify-content: center;
       }
     `,
   ],
