@@ -52,16 +52,25 @@ import { MatInputModule } from '@angular/material/input';
                       placeholder="max ingredients..."
               />
           </mat-form-field>
+      </form>
 
-          <app-form-errors
-                  [form]="form"
-                  [controlNames]="{
+      <app-form-errors
+          [form]="form"
+          [controlNames]="{
         keywords: 'Keywords',
         maxIngredients: 'Max ingredients',
         minIngredients: 'Min ingredients'
       }"/>
-      </form>
   `,
+  styles: [
+    `
+      :host {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    `,
+  ],
 })
 export class RecipeFilterV2Component implements OnInit {
   @Output() filterChange: Observable<string | undefined>;
