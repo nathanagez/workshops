@@ -26,7 +26,8 @@ import { NgIf, NgOptimizedImage } from '@angular/common';
               <mat-card-content>
                   <p>{{ recipe.description ?? '(no description)' }}</p>
               </mat-card-content>
-              <mat-card-actions class="actions">
+              <!-- Prevent event propagation so it doesn't trigger navigation. -->
+              <mat-card-actions (click)="$event.preventDefault(); $event.stopPropagation()" class="actions">
                   <ng-content/>
               </mat-card-actions>
           </mat-card>

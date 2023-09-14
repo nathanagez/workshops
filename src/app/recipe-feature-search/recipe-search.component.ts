@@ -29,24 +29,28 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ],
   template: `
-    <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
-    <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
+      <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
+      <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
 
-    <hr>
+      <hr>
 
-    <div class="container">
-      <div *ngIf="recipes()?.pending">...</div>
+      <div class="container">
+          <div *ngIf="recipes()?.pending">...</div>
 
-      <div *ngIf="recipes()?.error">Oups!</div>
+          <div *ngIf="recipes()?.error">Oups!</div>
 
-      <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+          <div *ngIf="recipes()?.value?.length === 0">No result.</div>
 
-      <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
-        <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)" mat-stroked-button color="primary">
-          ADD
-        </button>
-      </app-recipe-preview>
-    </div>
+          <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
+              <button
+                      [disabled]="!canAddRecipe(recipe)"
+                      (click)="addRecipe(recipe)"
+                      color="primary"
+                      mat-stroked-button>
+                  ADD
+              </button>
+          </app-recipe-preview>
+      </div>
   `,
   styles: [
     `
