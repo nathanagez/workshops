@@ -15,6 +15,7 @@ import { Cart } from '../recipe-domain/cart.service';
 import { RecipeRepository } from '../recipe-data-access/recipe-repository.service';
 import { Recipe } from '../recipe-domain/recipe';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-recipe-search',
@@ -27,19 +28,25 @@ import { MatButtonModule } from '@angular/material/button';
     RecipePreviewComponent,
     NgIf,
     MatButtonModule,
+    MatProgressSpinnerModule,
   ],
   template: `
       <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
       <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
 
-      <hr>
-
       <div class="container">
-          <div *ngIf="recipes()?.pending">...</div>
 
-          <div *ngIf="recipes()?.error">Oups!</div>
+          <mat-spinner *ngIf="recipes()?.pending"/>
 
-          <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+          <div *ngIf="recipes()?.error">
+              <img src="https://marmicode.io/assets/error.gif" alt="Oups!">
+              <p>Oups!</p>
+          </div>
+
+          <div *ngIf="recipes()?.value?.length === 0">
+              <img src="https://marmicode.io/assets/error.gif" alt="No results">
+              <p>No results.</p>
+          </div>
 
           <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
               <button
@@ -59,6 +66,10 @@ import { MatButtonModule } from '@angular/material/button';
         flex-wrap: wrap;
         justify-content: center;
         gap: 2rem;
+      }
+
+      p {
+        text-align: center;
       }
     `,
   ],
