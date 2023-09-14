@@ -1,25 +1,27 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { Cart } from './recipe-domain/cart.service';
+import { LayoutComponent, Link } from './ui/layout.component';
 
 @Component({
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, LayoutComponent],
   template: `
-        Recipes in cart: {{count()}}
-        <router-outlet/>
-
-        <hr>
-
-        <footer>
-            <a routerLink="/search">Search</a>
-            |
-            <a routerLink="/carousel">Carousel</a>
-        </footer>
+        <app-layout [links]="links">
+            <router-outlet/>
+        </app-layout>
     `,
 })
 export class AppComponent {
-  count = inject(Cart).count;
+  links: Link[] = [
+    {
+      route: ['/carousel'],
+      label: 'Carousel',
+    },
+    {
+      route: ['/search'],
+      label: 'Search',
+    },
+  ];
 }
