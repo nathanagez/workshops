@@ -62,6 +62,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
                         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
                     </button>
                     <span>whiskmate</span>
+                    <ng-content select="[slot=toolbar]"/>
                 </mat-toolbar>
                 <ng-content/>
             </mat-sidenav-content>
@@ -77,14 +78,9 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         width: 200px;
       }
 
-      .sidenav .mat-toolbar {
-        background: inherit;
-      }
-
-      .mat-toolbar.mat-primary {
-        position: sticky;
-        top: 0;
-        z-index: 1;
+      mat-toolbar {
+        display: flex;
+        justify-content: space-between;
       }
     `,
   ],
