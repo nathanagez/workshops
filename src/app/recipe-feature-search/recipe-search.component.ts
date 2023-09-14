@@ -29,18 +29,31 @@ import { Recipe } from '../recipe-domain/recipe';
   template: `
         <!--        <app-recipe-filter (filterSubmit)="keywords.set($event)"/>-->
         <app-recipe-filter-v2 (filterChange)="keywords.set($event)"/>
+        
         <hr>
 
-        <div *ngIf="recipes()?.pending">...</div>
+        <div class="container">
+          <div *ngIf="recipes()?.pending">...</div>
 
-        <div *ngIf="recipes()?.error">Oups!</div>
+          <div *ngIf="recipes()?.error">Oups!</div>
 
-        <div *ngIf="recipes()?.value?.length === 0">No result.</div>
+          <div *ngIf="recipes()?.value?.length === 0">No result.</div>
 
-        <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
+          <app-recipe-preview *ngFor="let recipe of recipes()?.value; trackBy: trackById" [recipe]="recipe">
             <button [disabled]="!canAddRecipe(recipe)" (click)="addRecipe(recipe)">ADD</button>
-        </app-recipe-preview>
+          </app-recipe-preview>
+        </div>
     `,
+  styles: [
+    `
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+      }
+    `,
+  ],
 })
 export class RecipeSearchComponent {
   keywords = signal<string | undefined>(undefined);
