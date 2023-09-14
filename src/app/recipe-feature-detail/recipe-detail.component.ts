@@ -13,11 +13,20 @@ import { RecipePreviewComponent } from '../recipe-ui/recipe-preview.component';
 
 @Component({
   selector: 'app-recipe-detail',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CommonModule, RecipePreviewComponent],
   template: `
         <app-recipe-preview *ngIf="recipe() as recipeValue" [recipe]="recipeValue"/>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles: [
+    `
+      :host {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    `,
+  ],
 })
 export class RecipeDetailComponent {
   @Input({ required: true }) set recipeId(recipeId: string) {
