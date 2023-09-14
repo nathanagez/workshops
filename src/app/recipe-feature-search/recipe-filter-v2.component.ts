@@ -14,42 +14,54 @@ import {
 } from '@angular/forms';
 import { filter, map, Observable } from 'rxjs';
 import { FormErrorsComponent } from '../ui/form-errors.component';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-recipe-filter-v2',
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormErrorsComponent],
+  imports: [ReactiveFormsModule, FormErrorsComponent, MatInputModule],
   template: `
-    <form [formGroup]="form">
-      <input formControlName="keywords" type="text" placeholder="keywords..." />
-      <input
-        formControlName="minIngredients"
-        type="number"
-        placeholder="min ingredients..."
-      />
-      <input
-        formControlName="maxIngredients"
-        type="number"
-        placeholder="max ingredients..."
-      />
+      <form [formGroup]="form">
+          <mat-form-field>
+              <mat-label>Keywords</mat-label>
+              <input
+                      formControlName="keywords"
+                      matInput
+                      type="text"
+                      placeholder="keywords..."/>
+          </mat-form-field>
 
-      <app-form-errors
-          [form]="form"
-          [controlNames]="{
+          <mat-form-field>
+              <mat-label>Min Ingredients</mat-label>
+              <input
+                      formControlName="minIngredients"
+                      matInput
+                      type="number"
+                      placeholder="min ingredients..."
+              />
+          </mat-form-field>
+
+
+          <mat-form-field>
+              <mat-label>Max Ingredients</mat-label>
+              <input
+                      formControlName="maxIngredients"
+                      matInput
+                      type="number"
+                      placeholder="max ingredients..."
+              />
+          </mat-form-field>
+
+          <app-form-errors
+                  [form]="form"
+                  [controlNames]="{
         keywords: 'Keywords',
         maxIngredients: 'Max ingredients',
         minIngredients: 'Min ingredients'
       }"/>
-    </form>
+      </form>
   `,
-  styles: [
-    `
-      input.ng-dirty.ng-invalid {
-        background-color: red;
-      }
-    `,
-  ],
 })
 export class RecipeFilterV2Component implements OnInit {
   @Output() filterChange: Observable<string | undefined>;
