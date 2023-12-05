@@ -18,7 +18,7 @@ else
 fi
 
 function test() {
-  nx run-many -t test,test-ui
+  nx run-many -t lint,test,test-ui
 }
 
 function revert() {
