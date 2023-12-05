@@ -10,6 +10,8 @@ jobs:
   test:
     name: ✅ Test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.36.0-jammy
     steps:
       - uses: actions/checkout@v3
         with:
@@ -37,9 +39,6 @@ jobs:
           version: 8
 
       - run: pnpm install
-
-      - name: Playwright browsers install
-        run: pnpm playwright install --with-deps
 
       - run: pnpm nx run-many --parallel=4 -t build,lint,test,test-ui
 
