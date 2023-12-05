@@ -22,7 +22,7 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 1. ☝️ all developers must commit to the same branch _(i.e. **no branching** / **no PRs**)_
 2. 🤝 each commit must be propagated immediately _(i.e. each commit must be pushed immediately and pulled by others)_ _(cf. [Limbo](#limbo))_
 3. ⏳ all developers must use [autorevert](#autorevert) or [tcr](#tcr)
-4. ✅ ci workflow should never break
+4. ✅ ci workflow should never break _(except missing visual regression snapshots)_
 5. 🤖 manual testing is forbidden _(i.e. **starting the app is not allowed, but TDD is highly encouraged 😉**)_
 6. 🗑️ in case of conflict, the first commit wins _(i.e. **never fix conflicts**)_
 
@@ -33,6 +33,12 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 - [ ] User should be able to add recipes to favorites.
 - [ ] User should not be able to add the same recipe to favorites twice.
 - [ ] User should be able to visit the details page of a recipe showing: ingredients, steps.
+
+## Scoring system
+
+- `+10` points for each requirement implemented & tested _(`0` points if not tested)_.
+- `-5` points for each CI workflow failure _(except missing visual regression snapshots)_.
+- **🚨 CHEATING 🚨** : 15 minutes AFK penalty for the whole team.
 
 ## Useful commands
 
