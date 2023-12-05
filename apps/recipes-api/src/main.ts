@@ -1,8 +1,10 @@
+import cors from 'cors';
 import express from 'express';
 import { greetingsRouter } from './greetings.router';
 
 const app = express();
 
+app.use(cors());
 app.use(greetingsRouter);
 
 const port = process.env.PORT || 3333;
