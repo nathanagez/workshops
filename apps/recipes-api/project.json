@@ -49,7 +49,7 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["{options.reportsDirectory}"],
+      "outputs": ["{workspaceRoot}/coverage/apps/recipes-api"],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/apps/recipes-api"
