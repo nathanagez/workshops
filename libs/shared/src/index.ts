@@ -1,1 +1,1 @@
-export * from './lib/greetings-dto';
+export * from './lib/greeting-dto';

@@ -1,6 +1,9 @@
+/* tsyringe needs this. */
+import 'reflect-metadata';
+
 import cors from 'cors';
 import express from 'express';
-import { greetingsRouter } from './greetings.router';
+import { greetingsRouter } from './greetings/greetings.router';
 
 const app = express();
 

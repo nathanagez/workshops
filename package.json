@@ -6,6 +6,7 @@
   "private": true,
   "devDependencies": {
     "@nx/devkit": "17.1.3",
+    "@nx/esbuild": "17.1.3",
     "@nx/eslint": "17.1.3",
     "@nx/eslint-plugin": "17.1.3",
     "@nx/express": "17.1.3",
@@ -58,6 +59,8 @@
     "express": "^4.18.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-router-dom": "6.11.2"
+    "react-router-dom": "6.11.2",
+    "reflect-metadata": "0.1.13",
+    "tsyringe": "4.8.0"
   }
 }

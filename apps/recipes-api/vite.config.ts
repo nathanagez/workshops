@@ -8,11 +8,6 @@ export default defineConfig({
 
   plugins: [nxViteTsPaths()],
 
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [ nxViteTsPaths() ],
-  // },
-
   test: {
     globals: true,
     cache: {
@@ -20,5 +15,6 @@ export default defineConfig({
     },
     environment: 'node',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    setupFiles: ['./src/test-setup.ts'],
   },
 });
