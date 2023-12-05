@@ -24,6 +24,11 @@ export default defineConfig({
   // },
 
   test: {
+    coverage: {
+      all: true,
+      include: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+      exclude: ['src/**/*.pw.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    },
     globals: true,
     cache: {
       dir: '../../node_modules/.vitest',

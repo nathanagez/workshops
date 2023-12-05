@@ -9,6 +9,11 @@ export default defineConfig({
   plugins: [nxViteTsPaths()],
 
   test: {
+    coverage: {
+      provider: 'v8',
+      all: true,
+      include: ['src/**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    },
     globals: true,
     cache: {
       dir: '../../node_modules/.vitest',
