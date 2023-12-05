@@ -38,4 +38,7 @@ jobs:
 
       - run: pnpm install
 
+      - name: Playwright browsers install
+        run: pnpm playwright install --with-deps
+
       - run: pnpm nx run-many --parallel=4 -t build,lint,test,test-ui
