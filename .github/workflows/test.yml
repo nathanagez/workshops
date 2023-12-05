@@ -42,3 +42,16 @@ jobs:
         run: pnpm playwright install --with-deps
 
       - run: pnpm nx run-many --parallel=4 -t build,lint,test,test-ui
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: 📊 Coverage
+          path: coverage
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: 🎭 Playwright Report
+          path: dist/.playwright
+          retention-days: 7
