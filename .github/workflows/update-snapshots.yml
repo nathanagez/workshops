@@ -33,6 +33,7 @@ jobs:
       - name: Playwright browsers install
         run: pnpm playwright install --with-deps
 
+      - name: Cache Nx
         uses: actions/cache@v3
         with:
           path: .nx/cache
@@ -45,7 +46,8 @@ jobs:
         run: |
           git config --global user.email "bot@marmicode.io"
           git config --global user.name "Marmicode Bot"
-          git diff --quiet || git commit -a -m "test: ✅ update snapshots"
+          git add .
+          git diff HEAD --quiet || git commit -a -m "test: ✅ update snapshots"
           git push
 
       - uses: actions/upload-artifact@v3
