@@ -5,22 +5,24 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "node",
-        "compiler": "tsc",
-        "outputPath": "dist/apps/recipes-api",
         "main": "apps/recipes-api/src/main.ts",
+        "outputPath": "dist/apps/recipes-api",
+        "outputFileName": "main.js",
         "tsConfig": "apps/recipes-api/tsconfig.app.json",
-        "isolatedConfig": true,
-        "webpackConfig": "apps/recipes-api/webpack.config.js",
+        "platform": "node",
         "generatePackageJson": true
       },
       "configurations": {
-        "development": {},
-        "production": {}
+        "development": {
+          "minify": false
+        },
+        "production": {
+          "minify": true
+        }
       }
     },
     "serve": {
