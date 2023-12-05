@@ -38,7 +38,11 @@ jobs:
 
       - run: pnpm install
 
-      - run: pnpm nx run-many --parallel=4 -t build,lint,test,test-ui
+      - name: Build, Lint & Test
+        run: pnpm nx run-many --parallel=4 -t build,lint,test
+
+      - name: Test UI
+        run: pnpm nx run-many --parallel=4 -t test-ui
 
       - uses: actions/upload-artifact@v3
         with:
