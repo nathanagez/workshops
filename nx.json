@@ -27,5 +27,17 @@
       "default"
     ],
     "sharedGlobals": []
+  },
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "projectNameAndRootFormat": "as-provided",
+        "bundler": "vite",
+        "compiler": "swc",
+        "e2eTestRunner": "none",
+        "routing": true,
+        "style": "css"
+      }
+    }
   }
 }
