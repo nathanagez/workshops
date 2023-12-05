@@ -26,11 +26,11 @@ jobs:
           node-version: 20
 
       - name: Cache Playwright Browsers
+        id: cache-playwright-browsers
         uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.json') }}
 
       - name: Cache Nx
         uses: actions/cache@v3
@@ -46,6 +46,7 @@ jobs:
       - run: pnpm install
 
       - name: Playwright browsers install
+        if: steps.cache-playwright-browsers.outputs.cache-hit != 'true'
         run: pnpm playwright install --with-deps
 
       - run: pnpm nx run-many --parallel=4 -t build,lint,test,test-ui
