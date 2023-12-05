@@ -1,0 +1,55 @@
+{
+  "name": "recipes-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/recipes-api/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/recipes-api",
+        "main": "apps/recipes-api/src/main.ts",
+        "tsConfig": "apps/recipes-api/tsconfig.app.json",
+        "assets": ["apps/recipes-api/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/recipes-api/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "recipes-api:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "recipes-api:build:development"
+        },
+        "production": {
+          "buildTarget": "recipes-api:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/recipes-api/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {}
+    }
+  },
+  "tags": []
+}
