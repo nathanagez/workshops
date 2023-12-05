@@ -2,7 +2,11 @@
   "name": "@whiskmate/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "autorevert": "tools/autorevert.sh",
+    "limbo": "tools/limbo.sh",
+    "tcr": "tools/tcr.sh"
+  },
   "private": true,
   "devDependencies": {
     "@nx/devkit": "17.1.3",
