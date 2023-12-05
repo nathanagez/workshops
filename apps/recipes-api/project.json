@@ -14,7 +14,6 @@
         "outputPath": "dist/apps/recipes-api",
         "main": "apps/recipes-api/src/main.ts",
         "tsConfig": "apps/recipes-api/tsconfig.app.json",
-        "assets": ["apps/recipes-api/src/assets"],
         "isolatedConfig": true,
         "webpackConfig": "apps/recipes-api/webpack.config.js"
       },
