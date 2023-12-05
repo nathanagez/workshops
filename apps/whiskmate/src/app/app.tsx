@@ -1,11 +1,7 @@
-import NxWelcome from './nx-welcome';
+import Greetings from './greetings/greetings';
 
 export function App() {
-  return (
-    <div>
-      <NxWelcome title="whiskmate" />
-    </div>
-  );
+  return <Greetings />;
 }
 
 export default App;
