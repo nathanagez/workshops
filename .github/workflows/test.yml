@@ -25,6 +25,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-playwright
+
       - name: Cache Nx
         uses: actions/cache@v3
         with:
