@@ -15,7 +15,8 @@
         "main": "apps/recipes-api/src/main.ts",
         "tsConfig": "apps/recipes-api/tsconfig.app.json",
         "isolatedConfig": true,
-        "webpackConfig": "apps/recipes-api/webpack.config.js"
+        "webpackConfig": "apps/recipes-api/webpack.config.js",
+        "generatePackageJson": true
       },
       "configurations": {
         "development": {},
