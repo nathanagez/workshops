@@ -66,6 +66,13 @@
       "options": {
         "lintFilePatterns": ["apps/whiskmate/**/*.{ts,tsx,js,jsx}"]
       }
+    },
+    "test-ui": {
+      "executor": "@nx/playwright:playwright",
+      "outputs": ["{workspaceRoot}/dist/.playwright/apps/whiskmate"],
+      "options": {
+        "config": "apps/whiskmate/playwright.config.ts"
+      }
     }
   },
   "tags": []
