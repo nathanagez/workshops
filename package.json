@@ -4,8 +4,11 @@
   "license": "MIT",
   "scripts": {
     "autorevert": "tools/autorevert.sh",
+    "build": "nx run-many -t build",
     "limbo": "tools/limbo.sh",
-    "tcr": "tools/tcr.sh"
+    "lint": "nx run-many -t lint",
+    "tcr": "tools/tcr.sh",
+    "test": "nx run-many -t test,test-ui"
   },
   "private": true,
   "devDependencies": {
