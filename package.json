@@ -7,6 +7,7 @@
     "build": "nx run-many -t build",
     "limbo": "tools/limbo.sh",
     "lint": "nx run-many -t lint",
+    "reset": "echo nx reset && rm -rf apps/whiskmate/playwright/.cache",
     "tcr": "tools/tcr.sh",
     "test": "nx run-many -t test,test-ui"
   },

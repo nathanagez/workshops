@@ -301,3 +301,11 @@ If the tests are green, it will commit and push your changes. Otherwise, it will
 ```sh
 pnpm tcr <commit-message>
 ```
+
+### Reset
+
+If things get weird with Playwright's Vite cache or anything similar...
+
+```sh
+pnpm reset
+```
