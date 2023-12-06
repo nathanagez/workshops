@@ -264,6 +264,9 @@ pnpm nx run-many --target=test-ui
 # Run all targets on all projects
 pnpm nx run-many --target=build,lint,test,test-ui
 
+# Run some targets on some projects
+pnpm nx run-many --projects=whiskmate,recipes-api --target=lint,test
+
 # Run Playwright Component testing with interactive ui
 pnpm nx test-ui recipes-api --ui
 
