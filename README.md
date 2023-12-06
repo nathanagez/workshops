@@ -1,5 +1,21 @@
 # 💃 The Limbo Game 🕺
 
+# Table of Contents
+
+- [Context](#context)
+- [Rules](#rules)
+- [App requirements](#app-requirements)
+- [Scoring system](#scoring-system)
+- [Useful information & resources](#useful-information--resources)
+  - [A list of recipes to fill the database with](#a-list-of-recipes-to-fill-the-database-with)
+  - [Docs](#docs)
+  - [Testing & Dependency Injection](#testing--dependency-injection)
+- [Useful commands](#useful-commands)
+  - [Running build, lint & tests](#running-build-lint--tests)
+  - [Limbo](#limbo)
+  - [Autorevert](#autorevert)
+  - [TCR](#tcr)
+
 ## Context
 
 Conventional development workflows _(i.e. based on branching, PRs, Code Review, manual testing, etc...)_ will often have the following drawbacks:
@@ -40,7 +56,7 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 - `-5` points for each CI workflow failure _(except missing visual regression snapshots)_.
 - **🚨 CHEATING 🚨** : 15 minutes AFK penalty for the whole team.
 
-## Tips and useful resources
+## Useful information & resources
 
 ### A list of recipes to fill the database with
 <details>
@@ -208,6 +224,14 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 
 - [Playwright Component Testing](https://playwright.dev/docs/test-components)
 - [Vitest Assertions](https://vitest.dev/api/expect.html)
+
+### Testing & Dependency Injection
+
+In order to replace dependencies with Test Doubles (e.g. fakes), we are using:
+
+- for the frontend: React Context API. Cf. [greetings.pw.tsx](apps/whiskmate/src/app/greetings/greetings.pw.tsx) & [greetings.client.fake.tsx](apps/whiskmate/src/app/greetings/greetings.client.fake.tsx) for an example.
+- for the backend: Tsyringe _which is wrapped in [di.ts](apps/recipes-api/src/di.ts)_. Cf. [greetings.router.spec.ts](apps/recipes-api/src/greetings/greetings.router.spec.ts) for an example.
+- you can also stub requests at HTTP level with Playwright. Cf. [Playwright Handle Requests](https://playwright.dev/docs/network#handle-requests).
 
 ## Useful commands
 
