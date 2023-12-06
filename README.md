@@ -46,9 +46,20 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 
 - [ ] User should be able to list all recipes.
 - [ ] User should be able to filter recipes by keywords.
-- [ ] User should be able to add recipes to favorites.
-- [ ] User should not be able to add the same recipe to favorites twice.
+- [ ] User should be able to add recipes to "my meals".
+- [ ] User should not be able to add the same recipe to "my meals" twice.
 - [ ] User should be able to visit the details page of a recipe showing: ingredients, steps.
+
+<details>
+<summary>App Screenshots</summary>
+
+### Recipe Search Page
+![Recipe Search](docs/recipe-search-page.png)
+
+### My Meals Page
+![My Meals](docs/my-meals-page.png)
+
+</details>
 
 ## Scoring system
 
