@@ -36,11 +36,11 @@ In this workshop, we will restrict ourselves with some extreme rules _(cf. [Rule
 ## Rules
 
 1. ☝️ all developers must commit to the same branch _(i.e. **no branching** / **no PRs**)_
-2. 🤝 each commit must be propagated immediately _(i.e. each commit must be pushed immediately and pulled by others)_ _(cf. [Limbo](#limbo))_
-3. ⏳ all developers must use [autorevert](#autorevert) or [tcr](#tcr)
+2. 🐒 manual testing is forbidden _(i.e. **starting the app is not allowed, but TDD is highly encouraged 😉**)_
+3. 🗑️ in case of conflict, the first commit wins _(i.e. **never fix conflicts**)_
 4. ✅ ci workflow should never break _(except missing visual regression snapshots)_
-5. 🤖 manual testing is forbidden _(i.e. **starting the app is not allowed, but TDD is highly encouraged 😉**)_
-6. 🗑️ in case of conflict, the first commit wins _(i.e. **never fix conflicts**)_
+5. 🔗 each commit must be propagated immediately _(i.e. each commit must be pushed immediately and pulled by others)_ _(cf. [Limbo](#limbo))_
+6. ⏳ all developers must use [autorevert](#autorevert) or [tcr](#tcr)
 
 ## App requirements
 
