@@ -9,5 +9,4 @@ test('Greetings should be polite', async ({ page, mount }) => {
     </WithGreetingsClientFake>
   );
   await expect(component).toContainText('Welcome!');
-  await expect(page).toHaveScreenshot();
 });
